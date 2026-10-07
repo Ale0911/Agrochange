@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AgroChain • Del campo al consumidor sin intermediarios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#e6f7f0',
+                            500: '#00b972',
+                            600: '#009e61',
+                            700: '#007a4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        
+        .hero-section { background-color: #3b3b3b; }
+        .dark .hero-section { background-color: #2a2a2a; }
+        
+        .blockchain-section { background-color: #f0fdf4; }
+        .dark .blockchain-section { background-color: #0b1512; }
+        
+        .card-hover { transition: all .3s cubic-bezier(.4,0,.2,1); }
+        .card-hover:hover { transform: translateY(-6px); box-shadow: 0 15px 30px -10px rgba(0, 185, 114, 0.25); }
+        
+        .nav-link { position: relative; }
+        .nav-link:after { content:''; position:absolute; width:0; height:2px; bottom:-4px; left:0; background:#00b972; transition:.3s; }
+        .nav-link:hover:after { width:100%; }
+        
+        .bubble-in { align-self:flex-start; background:#e5e7eb; color:#1f2937; border-radius:18px 18px 18px 4px; }
+        .dark .bubble-in { background:#374151; color:#f3f4f6; }
+        
+        .bubble-out { align-self:flex-end; background:#00b972; color:#fff; border-radius:18px 18px 4px 18px; }
+        
+        #chatMessages::-webkit-scrollbar, #inboxList::-webkit-scrollbar { width:6px; }
+        #chatMessages::-webkit-scrollbar-thumb, #inboxList::-webkit-scrollbar-thumb { background:#9ca3af; border-radius:10px; }
+        
+        .modal-wrap { position:fixed; inset:0; background:rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; padding:1rem; z-index:100; backdrop-filter: blur(6px); }
+        .field { width:100%; padding:0.85rem 1.15rem; border-radius:0.85rem; outline:none; transition: all 0.2s; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-[#121212] dark:text-neutral-100">
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="bg-white/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md border-b border-slate-200 dark:border-neutral-800 sticky top-0 z-50 transition-colors">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#00b972] rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md shadow-emerald-900/30">🌱</div>
+                <div>
+                    <span class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white block leading-none">AgroChain</span>
+                    <span class="text-[10px] text-brand-500 font-semibold tracking-wider uppercase">Norte de Santander</span>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="#inicio" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Inicio</a>
+                <a href="#blockchain-info" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Tecnología Blockchain</a>
+                <a href="#mision-vision" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Misión y Visión</a>
+                <a href="#productos" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Mercado</a>
+                <a href="#para-productores" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Publicar Cosecha</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Botón Modo Oscuro / Claro -->
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-amber-400 hover:opacity-80 transition" title="Cambiar Tema">
+                    <i id="themeIcon" class="fas fa-moon text-lg"></i>
+                </button>
+
+                <!-- Área de Autenticación / Mensajes -->
+                <div id="authArea" class="flex items-center gap-2">
+                    <!-- Se llena dinámicamente con JS -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION (Diseño de Imagen 1) -->
+    <section id="inicio" class="hero-section min-h-[85vh] flex items-center text-white py-16">
+        <div class="max-w-7xl mx-auto px-6 w-full">
+            <div class="max-w-3xl">
+                <!-- Pill superior -->
+                <div class="inline-flex items-center gap-2 bg-white/20 border border-white/20 px-5 py-2 rounded-full mb-8 backdrop-blur-sm">
+                    <span class="text-base">🌍</span>
+                    <span class="text-sm font-medium text-white">Tecnología para el Campo</span>
+                </div>
+
+                <!-- Título Hero -->
+                <h1 class="text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight mb-6">
+                    Del <span class="text-[#00b972]">campo</span> al consumidor <br class="hidden sm:inline">sin intermediarios
+                </h1>
+
+                <!-- Subtítulo -->
+                <p class="text-lg md:text-xl text-neutral-200 mb-10 leading-relaxed font-normal">
+                    Plataforma blockchain que conecta directamente a productores agrícolas con compradores. Transparencia total, tokenización de productos y contratos inteligentes.
+                </p>
+
+                <!-- Botones CTA -->
+                <div class="flex flex-wrap items-center gap-5 mb-16">
+                    <button onclick="scrollToSection('para-productores')" class="px-8 py-4 bg-[#00b972] hover:bg-[#009e61] rounded-full font-semibold text-lg flex items-center gap-3 transition shadow-lg">
+                        Soy Productor <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button onclick="scrollToSection('productos')" class="px-8 py-4 bg-transparent hover:bg-white/10 border-2 border-white/80 rounded-full font-semibold text-lg text-white transition">
+                        Explorar Productos
+                    </button>
+                </div>
+
+                <!-- Cápsulas inferiores -->
+                <div class="flex flex-wrap items-center gap-6 text-sm font-medium text-neutral-200">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-[#00b972] flex items-center justify-center text-white text-xs">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <span>Blockchain</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-[#eab308] flex items-center justify-center text-white text-xs">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <span>Traza tu Cosecha</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-[#0284c7] flex items-center justify-center text-white text-xs">
+                            <i class="fas fa-hand-holding-dollar"></i>
+                        </div>
+                        <span>Pagos Directos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECNOLOGÍA BLOCKCHAIN & FINANCIAMIENTO (Basado en Imagen 2 + Visión Futura) -->
+    <section id="blockchain-info" class="blockchain-section py-24 transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-slate-900 dark:text-white">Tecnología Blockchain al servicio del campo</h2>
+                <p class="text-brand-600 dark:text-emerald-400 text-lg md:text-xl font-medium max-w-3xl mx-auto">
+                    Transparencia total. Imposibilidad de manipulación. Confianza verificada.
+                </p>
+            </div>
+
+            <!-- Grilla de Tarjetas -->
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- Tarjeta 1: Trazabilidad -->
+                <div class="bg-white dark:bg-[#15231e] border border-slate-200 dark:border-emerald-900/50 rounded-3xl p-8 hover:border-emerald-500/50 transition shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-3xl text-brand-500 mb-6">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Trazabilidad Inalterable</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 text-sm leading-relaxed">
+                        Cada paso de tu producción (siembra, cuidado, cosecha y empaque) queda registrado para siempre en la red blockchain.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 2: Contratos Inteligentes -->
+                <div class="bg-white dark:bg-[#15231e] border border-slate-200 dark:border-emerald-900/50 rounded-3xl p-8 hover:border-emerald-500/50 transition shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-3xl text-brand-500 mb-6">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Contratos Inteligentes</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 text-sm leading-relaxed">
+                        Pagos automáticos cuando se cumple con las condiciones acordadas de entrega entre comprador y vendedor.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 3: Certificación Digital -->
+                <div class="bg-white dark:bg-[#15231e] border border-slate-200 dark:border-emerald-900/50 rounded-3xl p-8 hover:border-emerald-500/50 transition shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-3xl text-brand-500 mb-6">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Certificación Digital</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 text-sm leading-relaxed">
+                        Tu producto gana credibilidad ante compradores e inversores nacionales e internacionales sin certificadores costosos.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Banner Visión Futura: Financiamiento Agro -->
+            <div class="bg-emerald-900 text-white border border-emerald-700/50 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider mb-3">
+                        <i class="fas fa-rocket"></i> Visión Futura del Proyecto
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Próxima Fase: Financiamiento Directo e Inversión</h3>
+                    <p class="text-emerald-100 text-sm leading-relaxed">
+                        Además del chat y comercio directo, proyectamos la <strong>tokenización de cosechas futuras</strong> para que pequeños agricultores de Norte de Santander puedan recibir capital de inversión directa antes de cosechar, eliminando los préstamos bancarios de altas tasas.
+                    </p>
+                </div>
+                <button onclick="alert('Visión de desarrollo: Módulo de financiamiento descentralizado en construcción para la fase II del semillero de investigación.')" class="px-6 py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-2xl whitespace-nowrap shadow-lg transition">
+                    Conocer Modelo de Crédito
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MISIÓN Y VISIÓN -->
+    <section id="mision-vision" class="py-20 bg-slate-100 dark:bg-neutral-900 transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">Misión y Visión</h2>
+                <p class="text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto">El propósito económico y social que guía a AgroChain</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-neutral-800 rounded-3xl p-8 md:p-10 border border-slate-200 dark:border-neutral-700 shadow-sm">
+                    <div class="w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center text-2xl text-white mb-6">🎯</div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Misión</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 leading-relaxed">
+                        Brindar a los productores agrícolas de Norte de Santander y Colombia las herramientas tecnológicas descentralizadas para ofrecer sus cosechas directamente a compradores e inversores finales, garantizando precios justos y eliminando los costos excesivos de la cadena de intermediarios.
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-neutral-800 rounded-3xl p-8 md:p-10 border border-slate-200 dark:border-neutral-700 shadow-sm">
+                    <div class="w-14 h-14 bg-slate-900 dark:bg-neutral-900 rounded-2xl flex items-center justify-center text-2xl text-white mb-6">👁️</div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Visión</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 leading-relaxed">
+                        Consolidarnos como la plataforma de referencia regional en comercio agrícola directo, democratizando el acceso a capital de inversión a través de tokenización de productos y contratos inteligentes accesibles desde cualquier dispositivo.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESO -->
+    <section id="como-funciona" class="py-20 bg-white dark:bg-[#121212] transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">¿Cómo funciona?</h2>
+                <p class="text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto">Transparencia y desintermediación paso a paso</p>
+            </div>
+            <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-emerald-100 dark:bg-emerald-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">👤</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">1. Registro</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Crea tu perfil como Productor Agrícola o Comprador/Inversor.</p>
+                </div>
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-amber-100 dark:bg-amber-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">🌱</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">2. Publicación</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Sube tu cosecha documentando procesos de siembra y recolección.</p>
+                </div>
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-sky-100 dark:bg-sky-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">💬</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">3. Chat Directo</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Compradores contactan directamente al productor en tiempo real.</p>
+                </div>
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-violet-100 dark:bg-violet-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">🤝</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">4. Negociación</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Acuerden el precio sin comisiones de revendedores o acopiadores.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTOS EN TIEMPO REAL -->
+    <section id="productos" class="py-20 bg-slate-900 dark:bg-neutral-900 text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+                <div>
+                    <h2 class="text-4xl font-bold tracking-tight">Mercado de Cosechas Directas</h2>
+                    <p class="text-neutral-400 mt-2">Productos registrados en la base de datos de la región</p>
+                </div>
+                <span class="text-xs bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/30 font-medium flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Persistencia Sincronizada
+                </span>
+            </div>
+
+            <!-- Contenedor dinámico de productos -->
+            <div id="productsGrid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <!-- Se cargan dinámicamente desde el almacenamiento local o nube -->
+                <div class="col-span-full text-center py-12 text-neutral-500">Cargando productos del mercado...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARA PRODUCTORES / SUBIR PRODUCTO -->
+    <section id="para-productores" class="py-20 bg-slate-100 dark:bg-[#121212] transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="text-brand-500 font-bold text-sm tracking-wider uppercase">Para Agricultores</span>
+                    <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white mt-2 mb-6">Publica tu cosecha y vende al precio justo</h2>
+                    <p class="text-slate-600 dark:text-neutral-300 mb-8 leading-relaxed">
+                        Registra los detalles de tu finca, las fechas clave de tu siembra y recolección para ofrecer máxima transparencia a los compradores.
+                    </p>
+                    <ul class="space-y-4 text-slate-700 dark:text-neutral-300">
+                        <li class="flex items-center gap-3">
+                            <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
+                            <span>Registro transparente del proceso de cultivo.</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
+                            <span>Mensajería instantánea con clientes e inversores interesados.</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
+                            <span>Sin acopiadores que reduzcan tus ingresos finales.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-3xl p-8 shadow-xl">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Formulario de Publicación</h3>
+                    <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Nombre del Producto</label>
+                            <input id="pName" type="text" placeholder="Ej: Cacao Fino de Aroma / Café Orgánico" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Cantidad Disponible</label>
+                                <input id="pQty" type="text" placeholder="Ej: 500 Kg / 10 Cargas" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Precio Esperado ($ COP)</label>
+                                <input id="pPrice" type="text" placeholder="Ej: $18,000 / Kg" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Ubicación / Finca</label>
+                            <input id="pLocation" type="text" placeholder="Ej: Tibú, Norte de Santander / Finca El Paraíso" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Fecha de Siembra</label>
+                                <input id="pPlantDate" type="date" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Fecha de Recolección</label>
+                                <input id="pHarvestDate" type="date" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">URL de Imagen (Opcional)</label>
+                            <input id="pImg" type="url" placeholder="https://ejemplo.com/imagen.jpg" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700">
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-lg transition">
+                            🚀 Publicar Producto
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 dark:bg-neutral-950 text-neutral-400 py-12 border-t border-slate-800 dark:border-neutral-800">
+        <div class="max-w-7xl mx-auto px-6 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <div class="flex items-center justify-center md:justify-start gap-2 text-white font-bold text-xl mb-1">
+                    <span>🌱</span> AgroChain
+                </div>
+                <p class="text-xs text-neutral-500">Proyecto Semillero de Investigación • Universidad de Pamplona</p>
+            </div>
+            <div class="text-xs opacity-60">
+                Prueba Piloto Conectada • Sistema de Mensajería Persistente
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: LOGIN / SELECCIÓN DE PERFIL DEMO -->
+    <div id="loginModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-md w-full p-8 shadow-2xl relative text-slate-800 dark:text-white">
+            <button onclick="hideModal('loginModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
+            
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">Iniciar Sesión</h3>
+            <p class="text-sm text-slate-500 dark:text-neutral-400 mb-6">Selecciona una cuenta demo rápida o ingresa la tuya:</p>
+
+            <!-- Acceso Rápido con Perfiles Demo -->
+            <div class="mb-6">
+                <label class="block text-xs font-bold text-brand-500 uppercase mb-2">⚡ Probar como Perfil Demo (1-Clic):</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="quickLogin('vendedor1@agrochain.co')" class="p-3 border border-emerald-300 dark:border-emerald-900/60 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-left hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition">
+                        <div class="text-xs font-bold text-emerald-800 dark:text-emerald-300">👨‍🌾 Pedro Gómez</div>
+                        <div class="text-[10px] text-emerald-600 dark:text-emerald-400">Vendedor • Cacao</div>
+                    </button>
+                    <button onclick="quickLogin('vendedor2@agrochain.co')" class="p-3 border border-emerald-300 dark:border-emerald-900/60 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-left hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition">
+                        <div class="text-xs font-bold text-emerald-800 dark:text-emerald-300">👩‍🌾 María Rodríguez</div>
+                        <div class="text-[10px] text-emerald-600 dark:text-emerald-400">Vendedora • Café</div>
+                    </button>
+                    <button onclick="quickLogin('comprador1@agrochain.co')" class="p-3 border border-sky-300 dark:border-sky-900/60 rounded-xl bg-sky-50 dark:bg-sky-950/40 text-left hover:bg-sky-100 dark:hover:bg-sky-900/60 transition">
+                        <div class="text-xs font-bold text-sky-800 dark:text-sky-300">💼 Carlos Mendoza</div>
+                        <div class="text-[10px] text-sky-600 dark:text-sky-400">Comprador / Exportador</div>
+                    </button>
+                    <button onclick="quickLogin('comprador2@agrochain.co')" class="p-3 border border-sky-300 dark:border-sky-900/60 rounded-xl bg-sky-50 dark:bg-sky-950/40 text-left hover:bg-sky-100 dark:hover:bg-sky-900/60 transition">
+                        <div class="text-xs font-bold text-sky-800 dark:text-sky-300">🏢 Distribuidora Agro</div>
+                        <div class="text-[10px] text-sky-600 dark:text-sky-400">Inversor Regional</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center my-4 text-xs text-neutral-400"><div class="flex-1 h-px bg-slate-200 dark:bg-neutral-800"></div> O INGRESAR CON TU CUENTA <div class="flex-1 h-px bg-slate-200 dark:bg-neutral-800"></div></div>
+
+            <!-- Formulario Tradicional -->
+            <form onsubmit="handleCustomLogin(event)" class="space-y-3">
+                <input id="lEmail" type="email" placeholder="Correo electrónico" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                <input id="lPass" type="password" placeholder="Contraseña" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition">
+                    Entrar a mi Cuenta
+                </button>
+            </form>
+            
+            <p class="text-center text-xs text-slate-500 dark:text-neutral-400 mt-4">
+                ¿No tienes cuenta? <button onclick="hideModal('loginModal'); showModal('registerModal')" class="text-brand-500 font-bold underline">Regístrate</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTRO NUEVO PERFIL -->
+    <div id="registerModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-md w-full p-8 shadow-2xl relative text-slate-800 dark:text-white">
+            <button onclick="hideModal('registerModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
+            
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">Crear Nuevo Perfil</h3>
+            <p class="text-sm text-slate-500 dark:text-neutral-400 mb-6">Regístrate en la red de AgroChain</p>
+
+            <form onsubmit="handleRegister(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-neutral-400 mb-1">Nombre Completo o Empresa</label>
+                    <input id="rName" type="text" placeholder="Ej: Juan Pérez" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-neutral-400 mb-1">Rol en la Plataforma</label>
+                    <select id="rRole" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                        <option value="vendedor">🧑‍🌾 Vendedor / Productor Agrícola</option>
+                        <option value="comprador">💼 Comprador / Inversor</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-neutral-400 mb-1">Correo electrónico</label>
+                    <input id="rEmail" type="email" placeholder="correo@ejemplo.com" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-neutral-400 mb-1">Contraseña</label>
+                    <input id="rPass" type="password" placeholder="Mínimo 6 caracteres" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required minlength="6">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition">
+                    Crear Cuenta y Guardar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DETALLE DEL PRODUCTO Y PROCESO -->
+    <div id="detailModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full p-8 shadow-2xl relative text-slate-800 dark:text-white">
+            <button onclick="hideModal('detailModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
+            
+            <div id="detailContent">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CHAT DIRECTO P2P EN TIEMPO REAL -->
+    <div id="chatModal" class="hidden modal-wrap" style="z-index: 110;">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full flex flex-col shadow-2xl text-slate-800 dark:text-white" style="height: 600px; max-height: 90vh;">
+            <div class="p-5 border-b border-slate-200 dark:border-neutral-800 flex items-center justify-between bg-slate-50 dark:bg-neutral-950 rounded-t-3xl">
+                <div>
+                    <h3 id="chatTitle" class="font-bold text-slate-900 dark:text-white text-lg">Chat Directo</h3>
+                    <p id="chatSub" class="text-xs text-brand-500">Conexión Directa en Vivo</p>
+                </div>
+                <button onclick="hideModal('chatModal')" class="text-neutral-400 hover:text-slate-800 dark:hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+            
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-3 bg-slate-100/50 dark:bg-neutral-900">
+                <!-- Mensajes dinámicos -->
+            </div>
+
+            <div class="p-4 border-t border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-b-3xl flex gap-3">
+                <input id="chatInput" type="text" placeholder="Escribe tu mensaje o propuesta..." class="flex-1 px-4 py-3 bg-slate-100 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <button onclick="sendChatMessage()" class="px-5 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-sm transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BANDEJA DE MENSAJES RECIBIDOS -->
+    <div id="inboxModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-md w-full p-6 shadow-2xl relative flex flex-col text-slate-800 dark:text-white" style="height: 500px;">
+            <button onclick="hideModal('inboxModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">Mis Mensajes</h3>
+            <p class="text-xs text-slate-500 dark:text-neutral-400 mb-4">Conversaciones activas con compradores/vendedores</p>
+            
+            <div id="inboxList" class="flex-1 overflow-y-auto space-y-2 pr-1">
+                <!-- Lista dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- CONTROLADOR DE ALMACENAMIENTO Y LOGICA DE LA APLICACIÓN -->
+    <script>
+        // --- 1. GESTOR MODO OSCURO / CLARO ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('agrochain_theme') || 'dark';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun text-lg text-amber-400';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').className = 'fas fa-moon text-lg text-slate-700';
+            }
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('agrochain_theme', 'light');
+                document.getElementById('themeIcon').className = 'fas fa-moon text-lg text-slate-700';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('agrochain_theme', 'dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun text-lg text-amber-400';
+            }
+        }
+
+        // --- 2. BASE DE DATOS Y PERSISTENCIA (LOCALSTORAGE ENGINE) ---
+        const DEMO_USERS = {
+            'vendedor1@agrochain.co': { name: 'Pedro Gómez', role: 'vendedor', email: 'vendedor1@agrochain.co' },
+            'vendedor2@agrochain.co': { name: 'María Rodríguez', role: 'vendedor', email: 'vendedor2@agrochain.co' },
+            'comprador1@agrochain.co': { name: 'Carlos Mendoza', role: 'comprador', email: 'comprador1@agrochain.co' },
+            'comprador2@agrochain.co': { name: 'Distribuidora Agro', role: 'comprador', email: 'comprador2@agrochain.co' }
+        };
+
+        const INITIAL_PRODUCTS = [
+            {
+                id: 'prod_1',
+                name: 'Cacao Fino de Aroma',
+                quantity: '500 Kg',
+                price: '$18,000 / Kg',
+                location: 'Tibú, Norte de Santander',
+                plantDate: '2025-03-15',
+                harvestDate: '2026-09-20',
+                image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800',
+                sellerName: 'Pedro Gómez',
+                sellerEmail: 'vendedor1@agrochain.co'
+            },
+            {
+                id: 'prod_2',
+                name: 'Café Especial Pergamino',
+                quantity: '15 Cargas',
+                price: '$1,850,000 / Carga',
+                location: 'Toledo, Norte de Santander',
+                plantDate: '2024-11-10',
+                harvestDate: '2026-08-12',
+                image: 'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?w=800',
+                sellerName: 'María Rodríguez',
+                sellerEmail: 'vendedor2@agrochain.co'
+            }
+        ];
+
+        function getStoredProducts() {
+            const data = localStorage.getItem('agrochain_db_products');
+            if (!data) {
+                localStorage.setItem('agrochain_db_products', JSON.stringify(INITIAL_PRODUCTS));
+                return INITIAL_PRODUCTS;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveStoredProducts(products) {
+            localStorage.setItem('agrochain_db_products', JSON.stringify(products));
+        }
+
+        function getStoredChats() {
+            return JSON.parse(localStorage.getItem('agrochain_db_chats') || '{}');
+        }
+
+        function saveStoredChats(chats) {
+            localStorage.setItem('agrochain_db_chats', JSON.stringify(chats));
+        }
+
+        // --- 3. AUTENTICACIÓN Y ESTADO DE SESIÓN ---
+        window.currentUser = JSON.parse(localStorage.getItem('agrochain_user') || 'null') || DEMO_USERS['vendedor1@agrochain.co'];
+        window.activeChatId = null;
+
+        function renderAuthNav() {
+            const container = document.getElementById('authArea');
+            if (window.currentUser) {
+                const unreadCount = checkUnreadMessagesCount(window.currentUser.email);
+                const badgeHTML = unreadCount > 0 ? 
+                    `<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">${unreadCount}</span>` : '';
+
+                container.innerHTML = `
+                    <button onclick="showModal('inboxModal')" class="relative px-3 py-2 text-sm font-semibold text-slate-700 dark:text-neutral-300 hover:text-brand-500 flex items-center gap-2">
+                        <i class="fas fa-comments text-lg text-brand-500"></i>
+                        <span>Mensajes</span>
+                        ${badgeHTML}
+                    </button>
+                    <div class="flex items-center gap-2 border-l border-slate-200 dark:border-neutral-700 pl-3">
+                        <div class="w-8 h-8 rounded-full ${window.currentUser.role==='vendedor'?'bg-emerald-600':'bg-sky-600'} text-white flex items-center justify-center font-bold text-xs">
+                            ${window.currentUser.name.charAt(0)}
+                        </div>
+                        <div class="hidden sm:block text-left">
+                            <div class="text-xs font-bold text-slate-900 dark:text-white leading-tight">${window.currentUser.name}</div>
+                            <div class="text-[10px] text-slate-500 dark:text-neutral-400 capitalize">${window.currentUser.role}</div>
+                        </div>
+                        <button onclick="logout()" class="text-xs text-red-500 font-semibold ml-2 hover:underline">Salir</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button onclick="showModal('loginModal')" class="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white">Iniciar Sesión</button>
+                    <button onclick="showModal('registerModal')" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow-md">Registrarse</button>
+                `;
+            }
+        }
+
+        function quickLogin(email) {
+            window.currentUser = DEMO_USERS[email];
+            localStorage.setItem('agrochain_user', JSON.stringify(window.currentUser));
+            renderAuthNav();
+            hideModal('loginModal');
+            renderProducts();
+            alert(`✅ Sesión iniciada como: ${window.currentUser.name} (${window.currentUser.role.toUpperCase()})`);
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('rName').value;
+            const role = document.getElementById('rRole').value;
+            const email = document.getElementById('rEmail').value;
+
+            window.currentUser = { name, role, email };
+            localStorage.setItem('agrochain_user', JSON.stringify(window.currentUser));
+            renderAuthNav();
+            hideModal('registerModal');
+            alert(`🎉 Perfil creado con éxito como ${role.toUpperCase()}. ¡Bienvenido a AgroChain!`);
+        }
+
+        function handleCustomLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('lEmail').value;
+            window.currentUser = { name: email.split('@')[0], role: 'comprador', email };
+            localStorage.setItem('agrochain_user', JSON.stringify(window.currentUser));
+            renderAuthNav();
+            hideModal('loginModal');
+        }
+
+        function logout() {
+            window.currentUser = null;
+            localStorage.removeItem('agrochain_user');
+            renderAuthNav();
+        }
+
+        // --- 4. RENDERIZADO Y PERSISTENCIA DE PRODUCTOS ---
+        function renderProducts() {
+            const products = getStoredProducts();
+            const grid = document.getElementById('productsGrid');
+            
+            if (!products.length) {
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-neutral-400">No hay productos publicados aún. ¡Sé el primero en subir tu cosecha!</div>`;
+                return;
+            }
+
+            grid.innerHTML = '';
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-3xl overflow-hidden card-hover flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="h-48 bg-cover bg-center relative" style="background-image:url('${p.image}')">
+                                <span class="absolute top-3 right-3 bg-brand-500 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">
+                                    Verified Blockchain
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-xs text-brand-500 font-semibold mb-1">${p.location || 'Norte de Santander'}</div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">${p.name}</h3>
+                                <div class="flex justify-between items-baseline mb-4">
+                                    <span class="text-2xl font-bold text-slate-900 dark:text-white">${p.price}</span>
+                                    <span class="text-xs text-slate-500 dark:text-neutral-400">Disp: ${p.quantity}</span>
+                                </div>
+                                <div class="text-xs text-slate-500 dark:text-neutral-400 border-t border-slate-100 dark:border-neutral-700/80 pt-3 mb-4 space-y-1">
+                                    <div>🌱 Siembra: <strong>${p.plantDate || 'N/A'}</strong></div>
+                                    <div>🚜 Recolección: <strong>${p.harvestDate || 'N/A'}</strong></div>
+                                    <div>👨‍🌾 Vendedor: <strong class="text-slate-700 dark:text-neutral-200">${p.sellerName}</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <button onclick="openProductDetail('${p.id}', '${p.name}', '${p.sellerName}', '${p.sellerEmail}', '${p.price}', '${p.quantity}', '${p.location}', '${p.plantDate}', '${p.harvestDate}')" class="w-full py-3 bg-slate-900 hover:bg-brand-500 dark:bg-white dark:hover:bg-brand-500 text-white dark:text-slate-900 dark:hover:text-white font-bold rounded-xl transition text-sm">
+                                Ver Proceso y Contactar →
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function handleProductSubmit(e) {
+            e.preventDefault();
+            if (!window.currentUser) {
+                alert('⚠️ Debes iniciar sesión para publicar un producto.');
+                showModal('loginModal');
+                return;
+            }
+
+            const newProduct = {
+                id: 'prod_' + Date.now(),
+                name: document.getElementById('pName').value,
+                quantity: document.getElementById('pQty').value,
+                price: document.getElementById('pPrice').value,
+                location: document.getElementById('pLocation').value,
+                plantDate: document.getElementById('pPlantDate').value,
+                harvestDate: document.getElementById('pHarvestDate').value,
+                image: document.getElementById('pImg').value || 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800',
+                sellerName: window.currentUser.name,
+                sellerEmail: window.currentUser.email
+            };
+
+            const products = getStoredProducts();
+            products.unshift(newProduct);
+            saveStoredProducts(products);
+
+            renderProducts();
+            document.getElementById('productForm').reset();
+            alert("✅ ¡Producto publicado con éxito y guardado permanentemente!");
+            scrollToSection('productos');
+        }
+
+        function openProductDetail(id, name, seller, sellerEmail, price, qty, loc, plant, harvest) {
+            const content = document.getElementById('detailContent');
+            content.innerHTML = `
+                <div class="text-xs text-brand-500 font-bold uppercase tracking-wider mb-1">${loc}</div>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">${name}</h3>
+                <p class="text-sm text-slate-500 dark:text-neutral-400 mb-4">Publicado por <strong class="text-slate-700 dark:text-neutral-200">${seller}</strong></p>
+
+                <div class="bg-slate-50 dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-2xl p-4 mb-6 space-y-2 text-sm text-slate-700 dark:text-neutral-300">
+                    <div class="flex justify-between"><span>Precio:</span><strong class="text-brand-500 font-bold">${price}</strong></div>
+                    <div class="flex justify-between"><span>Disponible:</span><strong>${qty}</strong></div>
+                    <div class="flex justify-between"><span>Fecha de Siembra:</span><strong>${plant}</strong></div>
+                    <div class="flex justify-between"><span>Fecha de Recolección:</span><strong>${harvest}</strong></div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-xs font-bold uppercase text-slate-400 dark:text-neutral-500 mb-2">Línea de Trazabilidad Verificada</h4>
+                    <ul class="text-xs space-y-2 text-slate-600 dark:text-neutral-400">
+                        <li class="flex items-center gap-2">🌱 <span>Siembra limpia en ${loc}</span></li>
+                        <li class="flex items-center gap-2">💧 <span>Riego y control de cultivo orgánico</span></li>
+                        <li class="flex items-center gap-2">🚜 <span>Cosecha en fecha estimada (${harvest})</span></li>
+                        <li class="flex items-center gap-2">🔗 <span>Registro inmutable listo para transferencia</span></li>
+                    </ul>
+                </div>
+
+                <button onclick="startChat('${sellerEmail}', '${seller}', '${name}')" class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition">
+                    <i class="fas fa-comments"></i> Abrir Chat Directo con ${seller}
+                </button>
+            `;
+            showModal('detailModal');
+        }
+
+        // --- 5. CHAT Y MENSAJERÍA ENTRE CUENTAS CON NOTIFICACIONES ---
+        function startChat(sellerEmail, sellerName, productName) {
+            if (!window.currentUser) {
+                alert('⚠️ Inicia sesión para chatear con el vendedor.');
+                showModal('loginModal');
+                return;
+            }
+
+            hideModal('detailModal');
+            const chatId = [window.currentUser.email, sellerEmail].sort().join('___');
+            window.activeChatId = chatId;
+
+            document.getElementById('chatTitle').textContent = sellerName;
+            document.getElementById('chatSub').textContent = `Producto: ${productName}`;
+
+            showModal('chatModal');
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            if (!window.activeChatId) return;
+            const chats = getStoredChats();
+            const chat = chats[window.activeChatId] || { messages: [] };
+            
+            // Marcar mensajes como leídos
+            if (chats[window.activeChatId]) {
+                chats[window.activeChatId].messages.forEach(m => {
+                    if (m.senderEmail !== window.currentUser.email) m.read = true;
+                });
+                saveStoredChats(chats);
+                renderAuthNav();
+            }
+
+            const box = document.getElementById('chatMessages');
+            box.innerHTML = '';
+
+            if (!chat.messages.length) {
+                box.innerHTML = `<p class="text-center text-xs text-slate-400 dark:text-neutral-500 my-auto">Escribe un mensaje para iniciar la conversación directa.</p>`;
+                return;
+            }
+
+            chat.messages.forEach(msg => {
+                const isMe = msg.senderEmail === window.currentUser.email;
+                box.innerHTML += `
+                    <div class="${isMe ? 'bubble-out' : 'bubble-in'} px-4 py-2.5 max-w-[80%] text-sm shadow-sm">
+                        <div class="text-[10px] opacity-75 font-bold mb-0.5">${msg.senderName}</div>
+                        <div>${msg.text}</div>
+                    </div>
+                `;
+            });
+
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text || !window.activeChatId) return;
+
+            const chats = getStoredChats();
+            if (!chats[window.activeChatId]) {
+                chats[window.activeChatId] = {
+                    participants: window.activeChatId.split('___'),
+                    messages: []
+                };
+            }
+
+            chats[window.activeChatId].messages.push({
+                text,
+                senderName: window.currentUser.name,
+                senderEmail: window.currentUser.email,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                read: false
+            });
+
+            saveStoredChats(chats);
+            input.value = '';
+            renderChatMessages();
+        }
+
+        function checkUnreadMessagesCount(userEmail) {
+            const chats = getStoredChats();
+            let count = 0;
+            Object.values(chats).forEach(chat => {
+                if (chat.participants && chat.participants.includes(userEmail)) {
+                    chat.messages.forEach(m => {
+                        if (m.senderEmail !== userEmail && !m.read) count++;
+                    });
+                }
+            });
+            return count;
+        }
+
+        function renderInbox() {
+            if (!window.currentUser) return;
+            const chats = getStoredChats();
+            const list = document.getElementById('inboxList');
+            list.innerHTML = '';
+
+            let count = 0;
+            Object.entries(chats).forEach(([chatId, chat]) => {
+                if (chat.participants && chat.participants.includes(window.currentUser.email)) {
+                    count++;
+                    const otherUserEmail = chat.participants.find(e => e !== window.currentUser.email);
+                    const lastMsg = chat.messages[chat.messages.length - 1] || { text: 'Sin mensajes' };
+                    const unread = chat.messages.some(m => m.senderEmail !== window.currentUser.email && !m.read);
+
+                    list.innerHTML += `
+                        <div onclick="startChat('${otherUserEmail}', '${otherUserEmail.split('@')[0]}', 'Consulta General')" class="p-3.5 bg-slate-50 dark:bg-neutral-800 hover:bg-emerald-50 dark:hover:bg-neutral-700 rounded-xl cursor-pointer border border-slate-200 dark:border-neutral-700 transition flex justify-between items-center">
+                            <div>
+                                <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span>${otherUserEmail}</span>
+                                    ${unread ? '<span class="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full">Nuevo</span>' : ''}
+                                </div>
+                                <div class="text-xs text-slate-500 dark:text-neutral-400 truncate max-w-[220px] mt-0.5">${lastMsg.text}</div>
+                            </div>
+                            <i class="fas fa-chevron-right text-xs text-neutral-400"></i>
+                        </div>
+                    `;
+                }
+            });
+
+            if (count === 0) {
+                list.innerHTML = `<div class="text-center text-xs text-slate-400 dark:text-neutral-500 py-8">No tienes conversaciones activas.</div>`;
+            }
+        }
+
+        // --- 6. FUNCIONES AUXILIARES GLOBALES ---
+        function showModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            if (id === 'inboxModal') renderInbox();
+        }
+
+        function hideModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Permite enviar mensaje al presionar Enter
+        document.getElementById('chatInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendChatMessage();
+        });
+
+        // Arranque de la app
+        initTheme();
+        renderAuthNav();
+        renderProducts();
+    </script>
+</body>
+</html>
