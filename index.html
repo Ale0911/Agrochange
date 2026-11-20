@@ -12,8 +12,10 @@
                 extend: {
                     colors: {
                         brand: {
+                            50: '#e6f7f0',
                             500: '#00b972',
                             600: '#009e61',
+                            700: '#007a4b',
                         }
                     }
                 }
@@ -23,197 +25,453 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .bubble-in { align-self: flex-start; background: #e5e7eb; color: #1f2937; border-radius: 18px 18px 18px 4px; }
-        .dark .bubble-in { background: #374151; color: #f3f4f6; }
-        .bubble-out { align-self: flex-end; background: #00b972; color: #fff; border-radius: 18px 18px 4px 18px; }
-        .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,.8); display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 100; backdrop-filter: blur(6px); }
-        .field { width: 100%; padding: 0.75rem 1rem; border-radius: 0.75rem; outline: none; }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        
+        .hero-section { background-color: #3b3b3b; }
+        .dark .hero-section { background-color: #2a2a2a; }
+        
+        .blockchain-section { background-color: #f0fdf4; }
+        .dark .blockchain-section { background-color: #0b1512; }
+        
+        .card-hover { transition: all .3s cubic-bezier(.4,0,.2,1); }
+        .card-hover:hover { transform: translateY(-6px); box-shadow: 0 15px 30px -10px rgba(0, 185, 114, 0.25); }
+        
+        .nav-link { position: relative; }
+        .nav-link:after { content:''; position:absolute; width:0; height:2px; bottom:-4px; left:0; background:#00b972; transition:.3s; }
+        .nav-link:hover:after { width:100%; }
+        
+        .bubble-in { align-self:flex-start; background:#e5e7eb; color:#1f2937; border-radius:18px 18px 18px 4px; }
+        .dark .bubble-in { background:#374151; color:#f3f4f6; }
+        
+        .bubble-out { align-self:flex-end; background:#00b972; color:#fff; border-radius:18px 18px 4px 18px; }
+        
+        #chatMessages::-webkit-scrollbar, #inboxList::-webkit-scrollbar { width:6px; }
+        #chatMessages::-webkit-scrollbar-thumb, #inboxList::-webkit-scrollbar-thumb { background:#9ca3af; border-radius:10px; }
+        
+        .modal-wrap { position:fixed; inset:0; background:rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; padding:1rem; z-index:100; backdrop-filter: blur(6px); }
+        .field { width:100%; padding:0.85rem 1.15rem; border-radius:0.85rem; outline:none; transition: all 0.2s; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-[#121212] dark:text-neutral-100 min-h-screen">
+<body class="bg-slate-50 text-slate-800 dark:bg-[#121212] dark:text-neutral-100">
 
-    <!-- NAVBAR RESPONSIVO -->
-    <nav class="bg-white/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md border-b border-slate-200 dark:border-neutral-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-[#00b972] rounded-xl flex items-center justify-center text-white text-xl font-bold">🌱</div>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="bg-white/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md border-b border-slate-200 dark:border-neutral-800 sticky top-0 z-50 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#00b972] rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md shadow-emerald-900/30">🌱</div>
                 <div>
-                    <span class="text-lg sm:text-2xl font-bold tracking-tighter text-slate-900 dark:text-white block leading-none">AgroChain</span>
-                    <span class="text-[9px] sm:text-[10px] text-brand-500 font-semibold tracking-wider uppercase">Norte de Santander</span>
+                    <span class="text-xl sm:text-2xl font-bold tracking-tighter text-slate-900 dark:text-white block leading-none">AgroChain</span>
+                    <span class="text-[10px] text-brand-500 font-semibold tracking-wider uppercase">Norte de Santander</span>
                 </div>
             </div>
-
+            
             <div class="hidden lg:flex items-center gap-6 text-sm font-medium">
-                <a href="#inicio" class="hover:text-brand-500">Inicio</a>
-                <a href="#blockchain-info" class="hover:text-brand-500">Blockchain</a>
-                <a href="#productos" class="hover:text-brand-500">Mercado</a>
-                <a href="#usuarios" class="hover:text-brand-500">Usuarios</a>
-                <a href="#para-productores" class="hover:text-brand-500">Publicar</a>
+                <a href="#inicio" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Inicio</a>
+                <a href="#blockchain-info" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Tecnología Blockchain</a>
+                <a href="#mision-vision" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Misión y Visión</a>
+                <a href="#productos" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Mercado</a>
+                <a href="#usuarios" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Comunidad</a>
+                <a href="#para-productores" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Publicar Cosecha</a>
             </div>
 
-            <div class="flex items-center gap-2">
-                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-amber-400" title="Cambiar tema">
-                    <i id="themeIcon" class="fas fa-moon"></i>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Botón Modo Oscuro / Claro -->
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-amber-400 hover:opacity-80 transition" title="Cambiar Tema">
+                    <i id="themeIcon" class="fas fa-moon text-lg"></i>
                 </button>
-                <div id="authArea" class="flex items-center gap-2"></div>
+
+                <!-- Área de Autenticación / Mensajes -->
+                <div id="authArea" class="flex items-center gap-2">
+                    <!-- Se llena dinámicamente con JS -->
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <section id="inicio" class="bg-neutral-800 text-white py-12 sm:py-20 px-4 sm:px-6">
-        <div class="max-w-7xl mx-auto">
+    <section id="inicio" class="hero-section min-h-[85vh] flex items-center text-white py-16">
+        <div class="max-w-7xl mx-auto px-6 w-full">
             <div class="max-w-3xl">
-                <span class="inline-block bg-white/10 text-xs sm:text-sm px-3 py-1 rounded-full mb-4">🌍 Tecnología para el Campo</span>
-                <h1 class="text-3xl sm:text-6xl font-bold leading-tight mb-4">
-                    Del <span class="text-[#00b972]">campo</span> al consumidor sin intermediarios
+                <!-- Pill superior -->
+                <div class="inline-flex items-center gap-2 bg-white/20 border border-white/20 px-5 py-2 rounded-full mb-8 backdrop-blur-sm">
+                    <span class="text-base">🌍</span>
+                    <span class="text-sm font-medium text-white">Tecnología para el Campo</span>
+                </div>
+
+                <!-- Título Hero -->
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight mb-6">
+                    Del <span class="text-[#00b972]">campo</span> al consumidor <br class="hidden sm:inline">sin intermediarios
                 </h1>
-                <p class="text-sm sm:text-lg text-neutral-300 mb-6">
-                    Plataforma blockchain para conectar directamente productores agrícolas con compradores en tiempo real.
+
+                <!-- Subtítulo -->
+                <p class="text-base sm:text-lg md:text-xl text-neutral-200 mb-10 leading-relaxed font-normal">
+                    Plataforma blockchain que conecta directamente a productores agrícolas con compradores. Transparencia total, tokenización de productos y contratos inteligentes.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <button onclick="scrollToSection('para-productores')" class="w-full sm:w-auto px-6 py-3 bg-[#00b972] hover:bg-[#009e61] rounded-xl font-semibold text-center transition">Soy Productor</button>
-                    <button onclick="scrollToSection('productos')" class="w-full sm:w-auto px-6 py-3 border border-white/50 hover:bg-white/10 rounded-xl font-semibold text-center transition">Explorar Productos</button>
+
+                <!-- Botones CTA -->
+                <div class="flex flex-wrap items-center gap-4 sm:gap-5 mb-16">
+                    <button onclick="scrollToSection('para-productores')" class="w-full sm:w-auto px-8 py-4 bg-[#00b972] hover:bg-[#009e61] rounded-full font-semibold text-lg flex items-center justify-center gap-3 transition shadow-lg">
+                        Soy Productor <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button onclick="scrollToSection('productos')" class="w-full sm:w-auto px-8 py-4 bg-transparent hover:bg-white/10 border-2 border-white/80 rounded-full font-semibold text-lg text-white transition text-center">
+                        Explorar Productos
+                    </button>
+                </div>
+
+                <!-- Cápsulas inferiores -->
+                <div class="flex flex-wrap items-center gap-6 text-sm font-medium text-neutral-200">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-[#00b972] flex items-center justify-center text-white text-xs">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <span>Blockchain</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-[#eab308] flex items-center justify-center text-white text-xs">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <span>Traza tu Cosecha</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-[#0284c7] flex items-center justify-center text-white text-xs">
+                            <i class="fas fa-hand-holding-dollar"></i>
+                        </div>
+                        <span>Pagos Directos</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN BLOCKCHAIN & VISIÓN DE FINANCIAMIENTO -->
-    <section id="blockchain-info" class="py-12 sm:py-16 px-4 sm:px-6 bg-emerald-50/50 dark:bg-[#0b1512]">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl sm:text-4xl font-bold mb-2">Tecnología Blockchain al servicio del campo</h2>
-                <p class="text-brand-500 text-sm sm:text-base">Transparencia total, trazabilidad y acceso futuro a financiamiento directo.</p>
+    <!-- TECNOLOGÍA BLOCKCHAIN & FINANCIAMIENTO -->
+    <section id="blockchain-info" class="blockchain-section py-24 transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-slate-900 dark:text-white">Tecnología Blockchain al servicio del campo</h2>
+                <p class="text-brand-600 dark:text-emerald-400 text-lg md:text-xl font-medium max-w-3xl mx-auto">
+                    Transparencia total. Imposibilidad de manipulación. Confianza verificada.
+                </p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white dark:bg-[#15231e] p-6 rounded-2xl border border-slate-200 dark:border-emerald-900/50">
-                    <div class="text-2xl text-brand-500 mb-3"><i class="fas fa-link"></i></div>
-                    <h3 class="font-bold text-lg mb-2">Trazabilidad Inalterable</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-neutral-300">Registro verificable de fechas de siembra, cosecha y origen de cada lote agrícola.</p>
+
+            <!-- Grilla de Tarjetas -->
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white dark:bg-[#15231e] border border-slate-200 dark:border-emerald-900/50 rounded-3xl p-8 hover:border-emerald-500/50 transition shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-3xl text-brand-500 mb-6">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Trazabilidad Inalterable</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 text-sm leading-relaxed">
+                        Cada paso de tu producción (siembra, cuidado, cosecha y empaque) queda registrado para siempre en la red blockchain.
+                    </p>
                 </div>
-                <div class="bg-white dark:bg-[#15231e] p-6 rounded-2xl border border-slate-200 dark:border-emerald-900/50">
-                    <div class="text-2xl text-brand-500 mb-3"><i class="fas fa-comments-dollar"></i></div>
-                    <h3 class="font-bold text-lg mb-2">Negociación P2P Directa</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-neutral-300">Comunicación en tiempo real entre productor y comprador sin márgenes de acopiadores.</p>
+
+                <div class="bg-white dark:bg-[#15231e] border border-slate-200 dark:border-emerald-900/50 rounded-3xl p-8 hover:border-emerald-500/50 transition shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-3xl text-brand-500 mb-6">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Contratos Inteligentes</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 text-sm leading-relaxed">
+                        Pagos automáticos cuando se cumple con las condiciones acordadas de entrega entre comprador y vendedor.
+                    </p>
                 </div>
-                <div class="bg-white dark:bg-[#15231e] p-6 rounded-2xl border border-slate-200 dark:border-emerald-900/50">
-                    <div class="text-2xl text-brand-500 mb-3"><i class="fas fa-seedling"></i></div>
-                    <h3 class="font-bold text-lg mb-2">Visión: Financiamiento</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-neutral-300">Escalabilidad hacia tokenización de cosechas para obtener capital de trabajo anticipado.</p>
+
+                <div class="bg-white dark:bg-[#15231e] border border-slate-200 dark:border-emerald-900/50 rounded-3xl p-8 hover:border-emerald-500/50 transition shadow-sm">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-3xl text-brand-500 mb-6">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Certificación Digital</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 text-sm leading-relaxed">
+                        Tu producto gana credibilidad ante compradores e inversores nacionales e internacionales sin certificadores costosos.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Banner Visión Futura: Financiamiento Agro -->
+            <div class="bg-emerald-900 text-white border border-emerald-700/50 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider mb-3">
+                        <i class="fas fa-rocket"></i> Visión Futura del Proyecto
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Próxima Fase: Financiamiento Directo e Inversión</h3>
+                    <p class="text-emerald-100 text-sm leading-relaxed">
+                        Además del chat y comercio directo, proyectamos la <strong>tokenización de cosechas futuras</strong> para que pequeños agricultores de Norte de Santander puedan recibir capital de inversión directa antes de cosechar, eliminando los préstamos bancarios de altas tasas.
+                    </p>
+                </div>
+                <button onclick="alert('Visión de desarrollo: Módulo de financiamiento descentralizado en construcción para la fase II del semillero de investigación.')" class="px-6 py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-2xl whitespace-nowrap shadow-lg transition">
+                    Conocer Modelo de Crédito
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MISIÓN Y VISIÓN -->
+    <section id="mision-vision" class="py-20 bg-slate-100 dark:bg-neutral-900 transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">Misión y Visión</h2>
+                <p class="text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto">El propósito económico y social que guía a AgroChain</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-neutral-800 rounded-3xl p-8 md:p-10 border border-slate-200 dark:border-neutral-700 shadow-sm">
+                    <div class="w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center text-2xl text-white mb-6">🎯</div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Misión</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 leading-relaxed">
+                        Brindar a los productores agrícolas de Norte de Santander y Colombia las herramientas tecnológicas descentralizadas para ofrecer sus cosechas directamente a compradores e inversores finales, garantizando precios justos y eliminando los costos excesivos de la cadena de intermediarios.
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-neutral-800 rounded-3xl p-8 md:p-10 border border-slate-200 dark:border-neutral-700 shadow-sm">
+                    <div class="w-14 h-14 bg-slate-900 dark:bg-neutral-900 rounded-2xl flex items-center justify-center text-2xl text-white mb-6">👁️</div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Visión</h3>
+                    <p class="text-slate-600 dark:text-neutral-300 leading-relaxed">
+                        Consolidarnos como la plataforma de referencia regional en comercio agrícola directo, democratizando el acceso a capital de inversión a través de tokenización de productos y contratos inteligentes accesibles desde cualquier dispositivo.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- MERCADO DE PRODUCTOS EN TIEMPO REAL -->
-    <section id="productos" class="py-12 sm:py-20 px-4 sm:px-6 max-w-7xl mx-auto">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-            <h2 class="text-2xl sm:text-4xl font-bold">Mercado de Cosechas Directas</h2>
-            <span class="text-xs bg-emerald-500/15 text-brand-500 px-3 py-1.5 rounded-full font-medium w-fit">
-                ● Sincronizado en la nube
-            </span>
-        </div>
-        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center py-8 text-neutral-500">Conectando con la base de datos...</div>
+    <!-- PROCESO -->
+    <section id="como-funciona" class="py-20 bg-white dark:bg-[#121212] transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">¿Cómo funciona?</h2>
+                <p class="text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto">Transparencia y desintermediación paso a paso</p>
+            </div>
+            <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-emerald-100 dark:bg-emerald-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">👤</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">1. Registro</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Inicia sesión con Google o crea tu perfil como Productor o Comprador.</p>
+                </div>
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-amber-100 dark:bg-amber-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">🌱</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">2. Publicación</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Sube tu cosecha documentando procesos de siembra y recolección.</p>
+                </div>
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-sky-100 dark:bg-sky-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">💬</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">3. Chat Directo</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Compradores contactan directamente al productor en tiempo real entre dispositivos.</p>
+                </div>
+                <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
+                    <div class="w-16 h-16 mx-auto bg-violet-100 dark:bg-violet-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">🤝</div>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">4. Negociación</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Acuerden el precio sin comisiones de revendedores o acopiadores.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- NUEVO APARTADO: LISTA DE USUARIOS QUE HAN INICIADO SESIÓN -->
-    <section id="usuarios" class="py-12 sm:py-16 px-4 sm:px-6 bg-white dark:bg-[#181818] border-y border-slate-200 dark:border-neutral-800">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-8">
+    <!-- PRODUCTOS EN TIEMPO REAL (NUBE FIRESTORE) -->
+    <section id="productos" class="py-20 bg-slate-900 dark:bg-neutral-900 text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
                 <div>
-                    <h2 class="text-2xl sm:text-3xl font-bold">Comunidad AgroChain</h2>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-neutral-400">Usuarios registrados que han iniciado sesión en la plataforma</p>
+                    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Mercado de Cosechas Directas</h2>
+                    <p class="text-neutral-400 mt-2">Productos registrados en la nube de la región</p>
                 </div>
-                <span id="usersCountBadge" class="text-xs bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-neutral-300 px-3 py-1.5 rounded-full font-semibold w-fit">
+                <span class="text-xs bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/30 font-medium flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Nube Sincronizada en Vivo
+                </span>
+            </div>
+
+            <!-- Contenedor dinámico de productos -->
+            <div id="productsGrid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <div class="col-span-full text-center py-12 text-neutral-500">Conectando con Cloud Firestore...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NUEVO APARTADO: COMUNIDAD / LISTA DE USUARIOS REGISTRADOS -->
+    <section id="usuarios" class="py-16 bg-white dark:bg-[#161616] border-y border-slate-200 dark:border-neutral-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+                <div>
+                    <span class="text-brand-500 font-bold text-xs tracking-wider uppercase">Red Verificada</span>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">Comunidad AgroChain</h2>
+                    <p class="text-sm text-slate-500 dark:text-neutral-400">Personas que han iniciado sesión con Google en la plataforma</p>
+                </div>
+                <span id="usersCountBadge" class="text-xs bg-emerald-500/15 text-brand-500 border border-brand-500/30 px-4 py-2 rounded-full font-bold w-fit">
                     0 usuarios registrados
                 </span>
             </div>
-            <div id="usersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="col-span-full text-center py-6 text-neutral-500 text-sm">Cargando directorio de usuarios...</div>
+
+            <div id="usersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="col-span-full text-center py-8 text-neutral-500 text-sm">Cargando usuarios registrados en la nube...</div>
             </div>
         </div>
     </section>
 
-    <!-- FORMULARIO DE PUBLICACIÓN -->
-    <section id="para-productores" class="py-12 sm:py-20 px-4 sm:px-6 bg-slate-100 dark:bg-neutral-900">
-        <div class="max-w-3xl mx-auto bg-white dark:bg-neutral-800 p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 dark:border-neutral-700">
-            <h3 class="text-xl sm:text-2xl font-bold mb-2">Publicar Cosecha en la Nube</h3>
-            <p class="text-xs text-neutral-400 mb-6">Inicia sesión con tu cuenta de Google para publicar y recibir mensajes.</p>
-            <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-4">
-                <input id="pName" type="text" placeholder="Nombre del Producto (Ej: Cacao Fino de Aroma)" class="field bg-slate-100 dark:bg-neutral-900 border border-slate-300 dark:border-neutral-700" required>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <input id="pQty" type="text" placeholder="Cantidad (Ej: 500 Kg)" class="field bg-slate-100 dark:bg-neutral-900 border border-slate-300 dark:border-neutral-700" required>
-                    <input id="pPrice" type="text" placeholder="Precio ($ COP)" class="field bg-slate-100 dark:bg-neutral-900 border border-slate-300 dark:border-neutral-700" required>
-                </div>
-                <input id="pLocation" type="text" placeholder="Ubicación / Finca (Ej: Tibú, Norte de Santander)" class="field bg-slate-100 dark:bg-neutral-900 border border-slate-300 dark:border-neutral-700" required>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs text-neutral-400">Fecha Siembra</label>
-                        <input id="pPlantDate" type="date" class="field bg-slate-100 dark:bg-neutral-900 border border-slate-300 dark:border-neutral-700" required>
-                    </div>
-                    <div>
-                        <label class="text-xs text-neutral-400">Fecha Cosecha</label>
-                        <input id="pHarvestDate" type="date" class="field bg-slate-100 dark:bg-neutral-900 border border-slate-300 dark:border-neutral-700" required>
-                    </div>
-                </div>
-                <button type="submit" class="w-full py-3.5 bg-[#00b972] hover:bg-[#009e61] text-white font-bold rounded-xl transition shadow-md">
-                    🚀 Publicar Cosecha
-                </button>
-            </form>
-        </div>
-    </section>
-
-    <!-- MODAL CHAT EN TIEMPO REAL -->
-    <div id="chatModal" class="hidden modal-wrap">
-        <div class="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-lg h-[82vh] flex flex-col p-4 border border-slate-200 dark:border-neutral-700">
-            <div class="flex justify-between items-center border-b border-slate-200 dark:border-neutral-800 pb-3 mb-2">
+    <!-- PARA PRODUCTORES / SUBIR PRODUCTO -->
+    <section id="para-productores" class="py-20 bg-slate-100 dark:bg-[#121212] transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>
-                    <h3 id="chatTitle" class="font-bold text-base">Chat Directo</h3>
-                    <p id="chatSub" class="text-[11px] text-brand-500">Mensajería en tiempo real</p>
+                    <span class="text-brand-500 font-bold text-sm tracking-wider uppercase">Para Agricultores</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mt-2 mb-6">Publica tu cosecha y vende al precio justo</h2>
+                    <p class="text-slate-600 dark:text-neutral-300 mb-8 leading-relaxed">
+                        Registra los detalles de tu finca, las fechas clave de tu siembra y recolección para ofrecer máxima transparencia a los compradores en cualquier dispositivo.
+                    </p>
+                    <ul class="space-y-4 text-slate-700 dark:text-neutral-300">
+                        <li class="flex items-center gap-3">
+                            <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
+                            <span>Registro transparente del proceso de cultivo.</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
+                            <span>Mensajería instantánea en la nube con clientes e inversores.</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
+                            <span>Sin acopiadores que reduzcan tus ingresos finales.</span>
+                        </li>
+                    </ul>
                 </div>
-                <button onclick="hideModal('chatModal')" class="text-2xl text-neutral-500 hover:text-red-500 leading-none">&times;</button>
-            </div>
-            <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2 p-2 flex flex-col"></div>
-            <div class="flex gap-2 pt-3 border-t border-slate-200 dark:border-neutral-800">
-                <input id="chatInput" type="text" placeholder="Escribe un mensaje..." class="field bg-slate-100 dark:bg-neutral-800 text-sm">
-                <button onclick="sendChatMessage()" class="px-4 bg-[#00b972] hover:bg-[#009e61] text-white rounded-xl transition"><i class="fas fa-paper-plane"></i></button>
+
+                <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-3xl p-6 sm:p-8 shadow-xl">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Formulario de Publicación</h3>
+                    <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Nombre del Producto</label>
+                            <input id="pName" type="text" placeholder="Ej: Cacao Fino de Aroma / Café Orgánico" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Cantidad Disponible</label>
+                                <input id="pQty" type="text" placeholder="Ej: 500 Kg / 10 Cargas" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Precio Esperado ($ COP)</label>
+                                <input id="pPrice" type="text" placeholder="Ej: $18,000 / Kg" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Ubicación / Finca</label>
+                            <input id="pLocation" type="text" placeholder="Ej: Tibú, Norte de Santander / Finca El Paraíso" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Fecha de Siembra</label>
+                                <input id="pPlantDate" type="date" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Fecha de Recolección</label>
+                                <input id="pHarvestDate" type="date" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">URL de Imagen (Opcional)</label>
+                            <input id="pImg" type="url" placeholder="https://ejemplo.com/imagen.jpg" class="field bg-slate-50 dark:bg-neutral-900 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700">
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-lg transition">
+                            🚀 Publicar Producto en la Nube
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- MODAL BANDEJA DE ENTRADA -->
-    <div id="inboxModal" class="hidden modal-wrap">
-        <div class="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-md p-5 max-h-[80vh] flex flex-col border border-slate-200 dark:border-neutral-700">
-            <div class="flex justify-between items-center border-b border-slate-200 dark:border-neutral-800 pb-3 mb-3">
-                <h3 class="font-bold text-lg">Mis Conversaciones</h3>
-                <button onclick="hideModal('inboxModal')" class="text-2xl text-neutral-500 hover:text-red-500 leading-none">&times;</button>
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 dark:bg-neutral-950 text-neutral-400 py-12 border-t border-slate-800 dark:border-neutral-800">
+        <div class="max-w-7xl mx-auto px-6 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <div class="flex items-center justify-center md:justify-start gap-2 text-white font-bold text-xl mb-1">
+                    <span>🌱</span> AgroChain
+                </div>
+                <p class="text-xs text-neutral-500">Proyecto Semillero de Investigación • Universidad de Pamplona</p>
             </div>
-            <div id="inboxList" class="flex-1 overflow-y-auto space-y-2"></div>
+            <div class="text-xs opacity-60">
+                Conectado en Tiempo Real • Firebase Cloud Firestore
+            </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- MODAL INICIO DE SESIÓN CON GOOGLE -->
+    <!-- MODAL: LOGIN CON GOOGLE Y PERFILES DEMO -->
     <div id="loginModal" class="hidden modal-wrap">
-        <div class="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-md p-6 border border-slate-200 dark:border-neutral-700 text-center">
-            <div class="flex justify-end">
-                <button onclick="hideModal('loginModal')" class="text-2xl text-neutral-400 hover:text-red-500 leading-none">&times;</button>
-            </div>
-            <div class="w-14 h-14 bg-[#00b972]/15 text-brand-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">🌱</div>
-            <h3 class="font-bold text-xl mb-1">Bienvenido a AgroChain</h3>
-            <p class="text-xs text-neutral-400 mb-6">Inicia sesión con tu cuenta de Google para guardar tu perfil, publicar cosechas y chatear en tiempo real.</p>
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative text-slate-800 dark:text-white">
+            <button onclick="hideModal('loginModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
             
-            <button onclick="loginWithGoogle()" class="w-full py-3.5 px-4 bg-white hover:bg-slate-100 text-slate-800 font-bold rounded-xl border border-slate-300 shadow-sm flex items-center justify-center gap-3 transition">
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">Iniciar Sesión</h3>
+            <p class="text-sm text-slate-500 dark:text-neutral-400 mb-6">Conéctate con tu cuenta real de Google o usa un perfil de prueba:</p>
+
+            <!-- Botón Oficial de Google -->
+            <button onclick="loginWithGoogle()" class="w-full py-3.5 px-4 bg-white hover:bg-slate-100 text-slate-800 font-bold rounded-2xl border border-slate-300 shadow-sm flex items-center justify-center gap-3 transition mb-6">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
                 <span>Continuar con Google</span>
             </button>
+
+            <div class="flex items-center my-4 text-xs text-neutral-400">
+                <div class="flex-1 h-px bg-slate-200 dark:bg-neutral-800"></div> 
+                <span class="px-3">O PERFILES DEMO RÁPIDOS</span> 
+                <div class="flex-1 h-px bg-slate-200 dark:bg-neutral-800"></div>
+            </div>
+
+            <!-- Acceso Rápido con Perfiles Demo -->
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="quickLogin('vendedor1@agrochain.co')" class="p-3 border border-emerald-300 dark:border-emerald-900/60 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-left hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition">
+                    <div class="text-xs font-bold text-emerald-800 dark:text-emerald-300">👨‍🌾 Pedro Gómez</div>
+                    <div class="text-[10px] text-emerald-600 dark:text-emerald-400">Vendedor • Cacao</div>
+                </button>
+                <button onclick="quickLogin('vendedor2@agrochain.co')" class="p-3 border border-emerald-300 dark:border-emerald-900/60 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-left hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition">
+                    <div class="text-xs font-bold text-emerald-800 dark:text-emerald-300">👩‍🌾 María Rodríguez</div>
+                    <div class="text-[10px] text-emerald-600 dark:text-emerald-400">Vendedora • Café</div>
+                </button>
+                <button onclick="quickLogin('comprador1@agrochain.co')" class="p-3 border border-sky-300 dark:border-sky-900/60 rounded-xl bg-sky-50 dark:bg-sky-950/40 text-left hover:bg-sky-100 dark:hover:bg-sky-900/60 transition">
+                    <div class="text-xs font-bold text-sky-800 dark:text-sky-300">💼 Carlos Mendoza</div>
+                    <div class="text-[10px] text-sky-600 dark:text-sky-400">Comprador / Exportador</div>
+                </button>
+                <button onclick="quickLogin('comprador2@agrochain.co')" class="p-3 border border-sky-300 dark:border-sky-900/60 rounded-xl bg-sky-50 dark:bg-sky-950/40 text-left hover:bg-sky-100 dark:hover:bg-sky-900/60 transition">
+                    <div class="text-xs font-bold text-sky-800 dark:text-sky-300">🏢 Distribuidora Agro</div>
+                    <div class="text-[10px] text-sky-600 dark:text-sky-400">Inversor Regional</div>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- FIREBASE SDK: AUTHENTICATION + FIRESTORE EN TIEMPO REAL -->
+    <!-- MODAL: DETALLE DEL PRODUCTO Y PROCESO -->
+    <div id="detailModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-slate-800 dark:text-white">
+            <button onclick="hideModal('detailModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: CHAT DIRECTO P2P EN TIEMPO REAL -->
+    <div id="chatModal" class="hidden modal-wrap" style="z-index: 110;">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full flex flex-col shadow-2xl text-slate-800 dark:text-white" style="height: 600px; max-height: 90vh;">
+            <div class="p-5 border-b border-slate-200 dark:border-neutral-800 flex items-center justify-between bg-slate-50 dark:bg-neutral-950 rounded-t-3xl">
+                <div>
+                    <h3 id="chatTitle" class="font-bold text-slate-900 dark:text-white text-lg">Chat Directo</h3>
+                    <p id="chatSub" class="text-xs text-brand-500">Conexión Directa en la Nube</p>
+                </div>
+                <button onclick="hideModal('chatModal')" class="text-neutral-400 hover:text-slate-800 dark:hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+            
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-3 bg-slate-100/50 dark:bg-neutral-900"></div>
+
+            <div class="p-4 border-t border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-b-3xl flex gap-3">
+                <input id="chatInput" type="text" placeholder="Escribe tu mensaje o propuesta..." class="flex-1 px-4 py-3 bg-slate-100 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <button onclick="sendChatMessage()" class="px-5 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-sm transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BANDEJA DE MENSAJES RECIBIDOS -->
+    <div id="inboxModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-md w-full p-6 shadow-2xl relative flex flex-col text-slate-800 dark:text-white" style="height: 500px; max-height: 85vh;">
+            <button onclick="hideModal('inboxModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">Mis Mensajes</h3>
+            <p class="text-xs text-slate-500 dark:text-neutral-400 mb-4">Conversaciones sincronizadas en la nube</p>
+            
+            <div id="inboxList" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
+        </div>
+    </div>
+
+
+    <!-- CONTROLADOR CLOUD FIRESTORE + GOOGLE AUTHENTICATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -234,22 +492,56 @@
         const provider = new GoogleAuthProvider();
         const db = getFirestore(app);
 
+        // --- 1. GESTOR MODO OSCURO / CLARO ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('agrochain_theme') || 'dark';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun text-lg text-amber-400';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').className = 'fas fa-moon text-lg text-slate-700';
+            }
+        }
+
+        window.toggleDarkMode = function() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('agrochain_theme', 'light');
+                document.getElementById('themeIcon').className = 'fas fa-moon text-lg text-slate-700';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('agrochain_theme', 'dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun text-lg text-amber-400';
+            }
+        };
+
+        // --- 2. USUARIOS DEMO Y ESTADO DE SESIÓN ---
+        const DEMO_USERS = {
+            'vendedor1@agrochain.co': { name: 'Pedro Gómez', role: 'vendedor', email: 'vendedor1@agrochain.co', photo: '' },
+            'vendedor2@agrochain.co': { name: 'María Rodríguez', role: 'vendedor', email: 'vendedor2@agrochain.co', photo: '' },
+            'comprador1@agrochain.co': { name: 'Carlos Mendoza', role: 'comprador', email: 'comprador1@agrochain.co', photo: '' },
+            'comprador2@agrochain.co': { name: 'Distribuidora Agro', role: 'comprador', email: 'comprador2@agrochain.co', photo: '' }
+        };
+
         window.currentUser = null;
         window.activeChatId = null;
+        let allProductsCache = [];
         let unsubscribeChat = null;
         let unsubscribeInbox = null;
 
-        // 1. ESCUCHAR SESIÓN DE GOOGLE Y GUARDAR PERFIL EN FIRESTORE
+        // Escuchar sesión real de Google
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 window.currentUser = {
                     uid: user.uid,
                     name: user.displayName || user.email.split('@')[0],
+                    role: 'productor / comprador',
                     email: user.email,
                     photo: user.photoURL || ''
                 };
 
-                // Guardar o actualizar perfil del usuario en la nube (colección 'users')
+                // Guardar usuario en Cloud Firestore para el directorio de comunidad
                 try {
                     await setDoc(doc(db, "users", user.uid), {
                         uid: user.uid,
@@ -259,7 +551,7 @@
                         lastLogin: serverTimestamp()
                     }, { merge: true });
                 } catch (e) {
-                    console.error("Error guardando perfil en Firestore:", e);
+                    console.error("Error registrando usuario en Firestore:", e);
                 }
 
                 listenToInbox();
@@ -268,53 +560,78 @@
                 if (unsubscribeInbox) unsubscribeInbox();
             }
             renderAuthNav();
+            renderProductsFromCache();
         });
 
-        // Iniciar sesión con Google
         window.loginWithGoogle = async function() {
             try {
                 await signInWithPopup(auth, provider);
                 hideModal('loginModal');
             } catch (error) {
-                console.error("Error al iniciar sesión:", error);
-                alert("Error al conectar con Google: " + error.message);
+                console.error("Error con Google Sign-In:", error);
+                alert("No se pudo iniciar sesión con Google: " + error.message);
             }
         };
 
-        // Cerrar sesión
-        window.logout = async function() {
-            await signOut(auth);
+        window.quickLogin = async function(email) {
+            window.currentUser = DEMO_USERS[email];
+            // Registrar también el perfil demo en la colección 'users' si se usa
+            try {
+                await setDoc(doc(db, "users", email.replace(/[^a-zA-Z0-9]/g, '_')), {
+                    name: window.currentUser.name,
+                    email: window.currentUser.email,
+                    photo: '',
+                    lastLogin: serverTimestamp()
+                }, { merge: true });
+            } catch (e) {}
+
+            renderAuthNav();
+            listenToInbox();
+            hideModal('loginModal');
+            renderProductsFromCache();
+            alert(`✅ Sesión iniciada como: ${window.currentUser.name}`);
         };
 
-        // 2. RENDERIZAR BARRA DE NAVEGACIÓN
+        window.logout = async function() {
+            try { await signOut(auth); } catch (e) {}
+            window.currentUser = null;
+            if (unsubscribeInbox) unsubscribeInbox();
+            renderAuthNav();
+            renderProductsFromCache();
+        };
+
         function renderAuthNav() {
             const container = document.getElementById('authArea');
             if (window.currentUser) {
-                const avatar = window.currentUser.photo 
-                    ? `<img src="${window.currentUser.photo}" class="w-7 h-7 rounded-full border border-brand-500 object-cover">` 
-                    : `<span class="w-7 h-7 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs font-bold">${window.currentUser.name.charAt(0)}</span>`;
+                const avatarHtml = window.currentUser.photo 
+                    ? `<img src="${window.currentUser.photo}" class="w-8 h-8 rounded-full border border-brand-500 object-cover">`
+                    : `<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">${window.currentUser.name.charAt(0)}</div>`;
 
                 container.innerHTML = `
-                    <button onclick="showModal('inboxModal')" class="relative p-2 text-brand-500 hover:bg-slate-200 dark:hover:bg-neutral-800 rounded-lg transition" title="Mis Mensajes">
-                        <i class="fas fa-envelope text-lg"></i>
-                        <span id="unreadBadge" class="hidden absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                    <button onclick="showModal('inboxModal')" class="relative px-2.5 py-2 text-sm font-semibold text-slate-700 dark:text-neutral-300 hover:text-brand-500 flex items-center gap-1.5" title="Mis Mensajes">
+                        <i class="fas fa-comments text-lg text-brand-500"></i>
+                        <span class="hidden md:inline">Mensajes</span>
+                        <span id="unreadBadge" class="hidden w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
                     </button>
-                    <div class="flex items-center gap-2 bg-slate-200 dark:bg-neutral-800 px-2.5 py-1 rounded-xl border border-slate-300 dark:border-neutral-700">
-                        ${avatar}
-                        <span class="hidden sm:inline text-xs font-semibold max-w-[110px] truncate">${window.currentUser.name}</span>
-                        <button onclick="logout()" class="text-[11px] text-red-500 font-bold ml-1 hover:underline">Salir</button>
+                    <div class="flex items-center gap-2 border-l border-slate-200 dark:border-neutral-700 pl-2 sm:pl-3">
+                        ${avatarHtml}
+                        <div class="hidden sm:block text-left">
+                            <div class="text-xs font-bold text-slate-900 dark:text-white leading-tight max-w-[120px] truncate">${window.currentUser.name}</div>
+                            <div class="text-[10px] text-brand-500 capitalize">Conectado</div>
+                        </div>
+                        <button onclick="logout()" class="text-xs text-red-500 font-semibold ml-1 hover:underline">Salir</button>
                     </div>
                 `;
             } else {
                 container.innerHTML = `
-                    <button onclick="showModal('loginModal')" class="px-3.5 py-2 bg-[#00b972] hover:bg-[#009e61] text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center gap-2">
-                        <i class="fab fa-google"></i> <span>Entrar</span>
+                    <button onclick="showModal('loginModal')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md flex items-center gap-2 transition">
+                        <i class="fab fa-google"></i> <span>Iniciar Sesión</span>
                     </button>
                 `;
             }
         }
 
-        // 3. ESCUCHAR LISTA DE USUARIOS REGISTRADOS EN TIEMPO REAL
+        // --- 3. DIRECTORIO DE USUARIOS REGISTRADOS EN LA NUBE ---
         function listenToUsers() {
             const q = query(collection(db, "users"), orderBy("lastLogin", "desc"));
             onSnapshot(q, (snapshot) => {
@@ -323,12 +640,12 @@
                 badge.textContent = `${snapshot.size} usuario${snapshot.size === 1 ? '' : 's'} registrado${snapshot.size === 1 ? '' : 's'}`;
 
                 if (snapshot.empty) {
-                    grid.innerHTML = '<div class="col-span-full text-center text-neutral-500 py-6 text-sm">Aún no hay usuarios registrados. ¡Inicia sesión con Google para aparecer aquí!</div>';
+                    grid.innerHTML = `<div class="col-span-full text-center py-6 text-neutral-400 text-sm">Aún no hay usuarios registrados. ¡Inicia sesión con Google para aparecer aquí!</div>`;
                     return;
                 }
 
                 grid.innerHTML = '';
-                snapshot.forEach((docSnap) => {
+                snapshot.forEach(docSnap => {
                     const u = docSnap.data();
                     const isMe = window.currentUser && window.currentUser.email === u.email;
                     const photoHtml = u.photo 
@@ -342,8 +659,8 @@
                                 <h4 class="font-bold text-sm text-slate-900 dark:text-white truncate">${u.name}</h4>
                                 <p class="text-[11px] text-slate-500 dark:text-neutral-400 truncate">${u.email}</p>
                                 ${isMe 
-                                    ? `<span class="inline-block mt-1.5 text-[10px] bg-emerald-500/15 text-brand-500 px-2 py-0.5 rounded-full font-semibold">Tu perfil</span>`
-                                    : `<button onclick="startChat('${u.email}', '${u.name}')" class="mt-1.5 text-[11px] text-brand-500 hover:underline font-bold flex items-center gap-1"><i class="fas fa-comment-dots"></i> Enviar mensaje</button>`
+                                    ? `<span class="inline-block mt-1.5 text-[10px] bg-emerald-500/15 text-brand-500 px-2.5 py-0.5 rounded-full font-bold">Tu cuenta activa</span>`
+                                    : `<button onclick="startChat('${u.email}', '${u.name}', 'Consulta Directa')" class="mt-1.5 text-xs text-brand-500 hover:underline font-bold flex items-center gap-1"><i class="fas fa-comment-dots"></i> Enviar mensaje</button>`
                                 }
                             </div>
                         </div>
@@ -352,116 +669,177 @@
             });
         }
 
-        // 4. SINCRONIZACIÓN DE PRODUCTOS DESDE FIRESTORE
+        // --- 4. PRODUCTOS EN TIEMPO REAL DESDE CLOUD FIRESTORE ---
         function listenToProducts() {
             const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
             onSnapshot(q, (snapshot) => {
-                const grid = document.getElementById('productsGrid');
-                if (snapshot.empty) {
-                    grid.innerHTML = '<div class="col-span-full text-center text-neutral-500 py-8">Aún no hay cosechas publicadas. ¡Sé el primero en publicar abajo!</div>';
-                    return;
-                }
-                grid.innerHTML = '';
-                snapshot.forEach((docSnap) => {
-                    const p = docSnap.data();
-                    const isOwner = window.currentUser && window.currentUser.email === p.sellerEmail;
-                    
-                    grid.innerHTML += `
-                        <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <div class="flex justify-between items-start gap-2 mb-2">
-                                    <h4 class="font-bold text-lg text-slate-900 dark:text-white leading-snug">${p.name}</h4>
-                                    <span class="text-[10px] bg-emerald-500/15 text-brand-500 px-2 py-0.5 rounded-full font-bold whitespace-nowrap">Verificado</span>
-                                </div>
-                                <p class="text-brand-500 font-bold text-xl mb-3">${p.price} <span class="text-xs font-normal text-neutral-400">(${p.quantity})</span></p>
-                                <div class="space-y-1 text-xs text-slate-600 dark:text-neutral-400 border-t border-slate-100 dark:border-neutral-700/70 pt-3 mb-4">
-                                    <p>📍 <strong>Ubicación:</strong> ${p.location}</p>
-                                    <p>🌱 <strong>Siembra:</strong> ${p.plantDate || 'No especificada'}</p>
-                                    <p>🚜 <strong>Cosecha:</strong> ${p.harvestDate || 'No especificada'}</p>
-                                    <p>👨‍🌾 <strong>Productor:</strong> ${p.sellerName}</p>
-                                </div>
-                            </div>
-                            ${isOwner 
-                                ? `<div class="w-full py-2.5 bg-slate-100 dark:bg-neutral-700/50 text-center text-xs text-neutral-400 rounded-xl font-medium">Tu publicación activa</div>`
-                                : `<button onclick="startChat('${p.sellerEmail}', '${p.sellerName}')" class="w-full py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-[#00b972] dark:hover:bg-[#00b972] dark:hover:text-white transition font-bold rounded-xl text-sm">💬 Chatear con Productor</button>`
-                            }
-                        </div>
-                    `;
+                allProductsCache = [];
+                snapshot.forEach(docSnap => {
+                    allProductsCache.push({ id: docSnap.id, ...docSnap.data() });
                 });
+                renderProductsFromCache();
             }, (error) => {
-                console.error("Error leyendo productos:", error);
-                document.getElementById('productsGrid').innerHTML = '<div class="col-span-full text-center text-red-400 py-6 text-sm">Error de conexión con Firestore. Verifica que las reglas estén publicadas.</div>';
+                console.error("Error leyendo productos de Firestore:", error);
+                document.getElementById('productsGrid').innerHTML = `<div class="col-span-full text-center py-8 text-red-400">Error conectando con Firestore. Revisa las reglas de seguridad.</div>`;
             });
         }
 
-        // 5. PUBLICAR PRODUCTO EN LA NUBE
+        function renderProductsFromCache() {
+            const grid = document.getElementById('productsGrid');
+            if (!allProductsCache.length) {
+                grid.innerHTML = `<div class="col-span-full text-center py-10 text-neutral-400">No hay productos publicados en la nube aún. ¡Sé el primero en subir tu cosecha abajo!</div>`;
+                return;
+            }
+
+            grid.innerHTML = '';
+            allProductsCache.forEach(p => {
+                const imgUrl = p.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800';
+                grid.innerHTML += `
+                    <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-3xl overflow-hidden card-hover flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="h-48 bg-cover bg-center relative" style="background-image:url('${imgUrl}')">
+                                <span class="absolute top-3 right-3 bg-brand-500 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">
+                                    Verified Blockchain
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <div class="text-xs text-brand-500 font-semibold mb-1">${p.location || 'Norte de Santander'}</div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">${p.name}</h3>
+                                <div class="flex justify-between items-baseline mb-4">
+                                    <span class="text-2xl font-bold text-slate-900 dark:text-white">${p.price}</span>
+                                    <span class="text-xs text-slate-500 dark:text-neutral-400">Disp: ${p.quantity}</span>
+                                </div>
+                                <div class="text-xs text-slate-500 dark:text-neutral-400 border-t border-slate-100 dark:border-neutral-700/80 pt-3 mb-4 space-y-1">
+                                    <div>🌱 Siembra: <strong>${p.plantDate || 'N/A'}</strong></div>
+                                    <div>🚜 Recolección: <strong>${p.harvestDate || 'N/A'}</strong></div>
+                                    <div>👨‍🌾 Vendedor: <strong class="text-slate-700 dark:text-neutral-200">${p.sellerName}</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <button onclick="openProductDetail('${p.id}')" class="w-full py-3 bg-slate-900 hover:bg-brand-500 dark:bg-white dark:hover:bg-brand-500 text-white dark:text-slate-900 dark:hover:text-white font-bold rounded-xl transition text-sm">
+                                Ver Proceso y Contactar →
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
         window.handleProductSubmit = async function(e) {
             e.preventDefault();
             if (!window.currentUser) {
+                alert('⚠️ Debes iniciar sesión con Google o un perfil demo para publicar un producto.');
                 showModal('loginModal');
                 return;
             }
 
-            const pData = {
+            const newProduct = {
                 name: document.getElementById('pName').value,
                 quantity: document.getElementById('pQty').value,
                 price: document.getElementById('pPrice').value,
                 location: document.getElementById('pLocation').value,
                 plantDate: document.getElementById('pPlantDate').value,
                 harvestDate: document.getElementById('pHarvestDate').value,
+                image: document.getElementById('pImg').value || 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800',
                 sellerName: window.currentUser.name,
                 sellerEmail: window.currentUser.email,
                 createdAt: serverTimestamp()
             };
-            
+
             try {
-                await addDoc(collection(db, "products"), pData);
+                await addDoc(collection(db, "products"), newProduct);
                 document.getElementById('productForm').reset();
-                alert("✅ ¡Cosecha publicada en la nube! Ya es visible en cualquier dispositivo.");
+                alert("✅ ¡Producto publicado en la nube! Ya es visible en todos los dispositivos.");
                 scrollToSection('productos');
             } catch (error) {
                 console.error("Error al publicar:", error);
-                alert("Error al guardar en Firestore: " + error.message);
+                alert("Error al guardar en la nube: " + error.message);
             }
         };
 
-        // 6. CHAT P2P EN TIEMPO REAL ENTRE DISPOSITIVOS
-        window.startChat = function(otherEmail, otherName) {
+        window.openProductDetail = function(productId) {
+            const p = allProductsCache.find(item => item.id === productId);
+            if (!p) return;
+
+            const isOwner = window.currentUser && window.currentUser.email === p.sellerEmail;
+            const content = document.getElementById('detailContent');
+            content.innerHTML = `
+                <div class="text-xs text-brand-500 font-bold uppercase tracking-wider mb-1">${p.location}</div>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">${p.name}</h3>
+                <p class="text-sm text-slate-500 dark:text-neutral-400 mb-4">Publicado por <strong class="text-slate-700 dark:text-neutral-200">${p.sellerName}</strong></p>
+
+                <div class="bg-slate-50 dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-2xl p-4 mb-6 space-y-2 text-sm text-slate-700 dark:text-neutral-300">
+                    <div class="flex justify-between"><span>Precio:</span><strong class="text-brand-500 font-bold">${p.price}</strong></div>
+                    <div class="flex justify-between"><span>Disponible:</span><strong>${p.quantity}</strong></div>
+                    <div class="flex justify-between"><span>Fecha de Siembra:</span><strong>${p.plantDate}</strong></div>
+                    <div class="flex justify-between"><span>Fecha de Recolección:</span><strong>${p.harvestDate}</strong></div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-xs font-bold uppercase text-slate-400 dark:text-neutral-500 mb-2">Línea de Trazabilidad Verificada</h4>
+                    <ul class="text-xs space-y-2 text-slate-600 dark:text-neutral-400">
+                        <li class="flex items-center gap-2">🌱 <span>Siembra limpia en ${p.location}</span></li>
+                        <li class="flex items-center gap-2">💧 <span>Riego y control de cultivo orgánico</span></li>
+                        <li class="flex items-center gap-2">🚜 <span>Cosecha en fecha estimada (${p.harvestDate})</span></li>
+                        <li class="flex items-center gap-2">🔗 <span>Registro sincronizado listo para negociación directa</span></li>
+                    </ul>
+                </div>
+
+                ${isOwner 
+                    ? `<div class="w-full py-3.5 bg-slate-200 dark:bg-neutral-800 text-center text-xs text-neutral-400 rounded-xl font-bold">Esta es tu propia publicación</div>`
+                    : `<button onclick="startChat('${p.sellerEmail}', '${p.sellerName}', '${p.name}')" class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition">
+                        <i class="fas fa-comments"></i> Abrir Chat Directo con ${p.sellerName}
+                       </button>`
+                }
+            `;
+            showModal('detailModal');
+        };
+
+        // --- 5. CHAT Y MENSAJERÍA P2P EN TIEMPO REAL EN LA NUBE ---
+        window.startChat = function(otherEmail, otherName, productName) {
             if (!window.currentUser) {
+                alert('⚠️ Inicia sesión para chatear en tiempo real.');
                 showModal('loginModal');
                 return;
             }
 
+            hideModal('detailModal');
+            hideModal('inboxModal');
+
             const chatId = [window.currentUser.email, otherEmail].sort().join('___');
             window.activeChatId = chatId;
+
             document.getElementById('chatTitle').textContent = otherName;
-            document.getElementById('chatSub').textContent = otherEmail;
-            hideModal('inboxModal');
+            document.getElementById('chatSub').textContent = `Asunto: ${productName}`;
+
             showModal('chatModal');
-            
+
             if (unsubscribeChat) unsubscribeChat();
 
             const messagesRef = collection(db, "chats", chatId, "messages");
             const q = query(messagesRef, orderBy("timestamp", "asc"));
-            
+
             unsubscribeChat = onSnapshot(q, (snapshot) => {
                 const box = document.getElementById('chatMessages');
                 box.innerHTML = '';
-                
+
                 if (snapshot.empty) {
-                    box.innerHTML = '<p class="text-center text-xs text-neutral-500 my-auto">Envía el primer mensaje para iniciar la negociación.</p>';
+                    box.innerHTML = `<p class="text-center text-xs text-slate-400 dark:text-neutral-500 my-auto">Escribe un mensaje para iniciar la conversación directa.</p>`;
+                    return;
                 }
-                
+
                 snapshot.forEach(docSnap => {
                     const msg = docSnap.data();
                     const isMe = msg.senderEmail === window.currentUser.email;
                     box.innerHTML += `
-                        <div class="${isMe ? 'bubble-out' : 'bubble-in'} px-3.5 py-2 max-w-[82%] text-sm shadow-sm">
-                            <div class="font-bold text-[10px] opacity-75 mb-0.5">${msg.senderName}</div>
+                        <div class="${isMe ? 'bubble-out' : 'bubble-in'} px-4 py-2.5 max-w-[80%] text-sm shadow-sm">
+                            <div class="text-[10px] opacity-75 font-bold mb-0.5">${msg.senderName}</div>
                             <div>${msg.text}</div>
                         </div>
                     `;
                 });
+
                 box.scrollTop = box.scrollHeight;
             });
         };
@@ -492,7 +870,6 @@
             }, { merge: true });
         };
 
-        // 7. BANDEJA DE ENTRADA EN TIEMPO REAL
         function listenToInbox() {
             if (!window.currentUser) return;
             if (unsubscribeInbox) unsubscribeInbox();
@@ -504,24 +881,26 @@
                 list.innerHTML = '';
                 let count = 0;
                 let hasNew = false;
-                
+
                 snapshot.forEach(docSnap => {
                     const chat = docSnap.data();
                     if (chat.participants && chat.participants.includes(window.currentUser.email)) {
                         count++;
                         const otherEmail = chat.participants.find(e => e !== window.currentUser.email);
                         const otherName = (chat.names && chat.names[otherEmail]) ? chat.names[otherEmail] : otherEmail.split('@')[0];
-                        
-                        if (chat.lastSender && chat.lastSender !== window.currentUser.email) {
-                            hasNew = true;
-                        }
+                        const isUnread = chat.lastSender && chat.lastSender !== window.currentUser.email;
+
+                        if (isUnread) hasNew = true;
 
                         list.innerHTML += `
-                            <div onclick="startChat('${otherEmail}', '${otherName}')" class="p-3 border border-slate-200 dark:border-neutral-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-800 transition rounded-xl flex justify-between items-center">
+                            <div onclick="startChat('${otherEmail}', '${otherName}', 'Consulta Directa')" class="p-3.5 bg-slate-50 dark:bg-neutral-800 hover:bg-emerald-50 dark:hover:bg-neutral-700 rounded-xl cursor-pointer border border-slate-200 dark:border-neutral-700 transition flex justify-between items-center">
                                 <div class="overflow-hidden">
-                                    <div class="font-bold text-sm dark:text-white truncate">${otherName}</div>
-                                    <div class="text-[11px] text-neutral-400 truncate">${otherEmail}</div>
-                                    <div class="text-xs text-brand-500 truncate mt-1">${chat.lastMessage || 'Conversación iniciada'}</div>
+                                    <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                        <span class="truncate">${otherName}</span>
+                                        ${isUnread ? '<span class="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full">Nuevo</span>' : ''}
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400 truncate">${otherEmail}</div>
+                                    <div class="text-xs text-brand-500 truncate max-w-[230px] mt-1">${chat.lastMessage || 'Sin mensajes'}</div>
                                 </div>
                                 <i class="fas fa-chevron-right text-xs text-neutral-400 ml-2"></i>
                             </div>
@@ -533,15 +912,14 @@
                     if (hasNew) badge.classList.remove('hidden');
                     else badge.classList.add('hidden');
                 }
-                
+
                 if (count === 0) {
-                    list.innerHTML = '<p class="text-center text-sm text-neutral-500 py-6">No tienes conversaciones activas aún.</p>';
+                    list.innerHTML = `<div class="text-center text-xs text-slate-400 dark:text-neutral-500 py-8">No tienes conversaciones activas en la nube.</div>`;
                 }
             });
         }
 
-        // UTILIDADES UI
-        window.toggleDarkMode = () => document.documentElement.classList.toggle('dark');
+        // --- 6. FUNCIONES AUXILIARES GLOBALES ---
         window.showModal = id => document.getElementById(id).classList.remove('hidden');
         window.hideModal = id => document.getElementById(id).classList.add('hidden');
         window.scrollToSection = id => document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
@@ -550,11 +928,11 @@
             if (e.key === 'Enter') sendChatMessage();
         });
 
-        // ARRANQUE
+        // Arranque de la app
+        initTheme();
         renderAuthNav();
         listenToProducts();
         listenToUsers();
     </script>
 </body>
 </html>
-
