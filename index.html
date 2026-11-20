@@ -45,43 +45,43 @@
         
         .bubble-out { align-self:flex-end; background:#00b972; color:#fff; border-radius:18px 18px 4px 18px; }
         
-        #chatMessages::-webkit-scrollbar, #inboxList::-webkit-scrollbar { width:6px; }
-        #chatMessages::-webkit-scrollbar-thumb, #inboxList::-webkit-scrollbar-thumb { background:#9ca3af; border-radius:10px; }
+        #chatMessages::-webkit-scrollbar, #inboxList::-webkit-scrollbar, #myProductsList::-webkit-scrollbar { width:6px; }
+        #chatMessages::-webkit-scrollbar-thumb, #inboxList::-webkit-scrollbar-thumb, #myProductsList::-webkit-scrollbar-thumb { background:#9ca3af; border-radius:10px; }
         
-        .modal-wrap { position:fixed; inset:0; background:rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; padding:1rem; z-index:100; backdrop-filter: blur(6px); }
-        .field { width:100%; padding:0.85rem 1.15rem; border-radius:0.85rem; outline:none; transition: all 0.2s; }
+        .modal-wrap { position:fixed; inset:0; background:rgba(0,0,0,.78); display:flex; align-items:center; justify-content:center; padding:1rem; z-index:100; backdrop-filter: blur(6px); overflow-y: auto; }
+        .field { width:100%; padding:0.75rem 1rem; border-radius:0.85rem; outline:none; transition: all 0.2s; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-[#121212] dark:text-neutral-100">
 
     <!-- BARRA DE NAVEGACIÓN -->
     <nav class="bg-white/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md border-b border-slate-200 dark:border-neutral-800 sticky top-0 z-50 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-[#00b972] rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md shadow-emerald-900/30">🌱</div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 bg-[#00b972] rounded-2xl flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-md shadow-emerald-900/30">🌱</div>
                 <div>
-                    <span class="text-xl sm:text-2xl font-bold tracking-tighter text-slate-900 dark:text-white block leading-none">AgroChain</span>
-                    <span class="text-[10px] text-brand-500 font-semibold tracking-wider uppercase">Norte de Santander</span>
+                    <span class="text-lg sm:text-2xl font-bold tracking-tighter text-slate-900 dark:text-white block leading-none">AgroChain</span>
+                    <span class="text-[9px] sm:text-[10px] text-brand-500 font-semibold tracking-wider uppercase">Norte de Santander</span>
                 </div>
             </div>
             
-            <div class="hidden lg:flex items-center gap-6 text-sm font-medium">
+            <div class="hidden xl:flex items-center gap-6 text-sm font-medium">
                 <a href="#inicio" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Inicio</a>
-                <a href="#blockchain-info" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Tecnología Blockchain</a>
+                <a href="#blockchain-info" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Blockchain</a>
                 <a href="#mision-vision" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Misión y Visión</a>
                 <a href="#productos" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Mercado</a>
                 <a href="#usuarios" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Comunidad</a>
-                <a href="#para-productores" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Publicar Cosecha</a>
+                <a href="#para-productores" class="nav-link text-slate-700 dark:text-neutral-300 hover:text-brand-500">Publicar</a>
             </div>
 
-            <div class="flex items-center gap-2 sm:gap-3">
+            <div class="flex items-center gap-2">
                 <!-- Botón Modo Oscuro / Claro -->
-                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-amber-400 hover:opacity-80 transition" title="Cambiar Tema">
-                    <i id="themeIcon" class="fas fa-moon text-lg"></i>
+                <button onclick="toggleDarkMode()" class="p-2 sm:p-2.5 rounded-xl bg-slate-200 dark:bg-neutral-800 text-slate-700 dark:text-amber-400 hover:opacity-80 transition" title="Cambiar Tema">
+                    <i id="themeIcon" class="fas fa-moon text-base sm:text-lg"></i>
                 </button>
 
-                <!-- Área de Autenticación / Mensajes -->
-                <div id="authArea" class="flex items-center gap-2">
+                <!-- Área de Autenticación / Mis Productos / Mi Perfil / Mensajes -->
+                <div id="authArea" class="flex items-center gap-1.5 sm:gap-2">
                     <!-- Se llena dinámicamente con JS -->
                 </div>
             </div>
@@ -89,27 +89,23 @@
     </nav>
 
     <!-- HERO SECTION -->
-    <section id="inicio" class="hero-section min-h-[85vh] flex items-center text-white py-16">
+    <section id="inicio" class="hero-section min-h-[82vh] flex items-center text-white py-14 sm:py-16">
         <div class="max-w-7xl mx-auto px-6 w-full">
             <div class="max-w-3xl">
-                <!-- Pill superior -->
                 <div class="inline-flex items-center gap-2 bg-white/20 border border-white/20 px-5 py-2 rounded-full mb-8 backdrop-blur-sm">
                     <span class="text-base">🌍</span>
                     <span class="text-sm font-medium text-white">Tecnología para el Campo</span>
                 </div>
 
-                <!-- Título Hero -->
                 <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight mb-6">
                     Del <span class="text-[#00b972]">campo</span> al consumidor <br class="hidden sm:inline">sin intermediarios
                 </h1>
 
-                <!-- Subtítulo -->
                 <p class="text-base sm:text-lg md:text-xl text-neutral-200 mb-10 leading-relaxed font-normal">
                     Plataforma blockchain que conecta directamente a productores agrícolas con compradores. Transparencia total, tokenización de productos y contratos inteligentes.
                 </p>
 
-                <!-- Botones CTA -->
-                <div class="flex flex-wrap items-center gap-4 sm:gap-5 mb-16">
+                <div class="flex flex-wrap items-center gap-4 sm:gap-5 mb-14">
                     <button onclick="scrollToSection('para-productores')" class="w-full sm:w-auto px-8 py-4 bg-[#00b972] hover:bg-[#009e61] rounded-full font-semibold text-lg flex items-center justify-center gap-3 transition shadow-lg">
                         Soy Productor <i class="fas fa-arrow-right"></i>
                     </button>
@@ -118,7 +114,6 @@
                     </button>
                 </div>
 
-                <!-- Cápsulas inferiores -->
                 <div class="flex flex-wrap items-center gap-6 text-sm font-medium text-neutral-200">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-full bg-[#00b972] flex items-center justify-center text-white text-xs">
@@ -144,16 +139,15 @@
     </section>
 
     <!-- TECNOLOGÍA BLOCKCHAIN & FINANCIAMIENTO -->
-    <section id="blockchain-info" class="blockchain-section py-24 transition-colors">
+    <section id="blockchain-info" class="blockchain-section py-20 transition-colors">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
+            <div class="text-center mb-14">
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-slate-900 dark:text-white">Tecnología Blockchain al servicio del campo</h2>
                 <p class="text-brand-600 dark:text-emerald-400 text-lg md:text-xl font-medium max-w-3xl mx-auto">
                     Transparencia total. Imposibilidad de manipulación. Confianza verificada.
                 </p>
             </div>
 
-            <!-- Grilla de Tarjetas -->
             <div class="grid md:grid-cols-3 gap-8 mb-12">
                 <div class="bg-white dark:bg-[#15231e] border border-slate-200 dark:border-emerald-900/50 rounded-3xl p-8 hover:border-emerald-500/50 transition shadow-sm">
                     <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-3xl text-brand-500 mb-6">
@@ -186,7 +180,6 @@
                 </div>
             </div>
 
-            <!-- Banner Visión Futura: Financiamiento Agro -->
             <div class="bg-emerald-900 text-white border border-emerald-700/50 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
                 <div class="max-w-2xl">
                     <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider mb-3">
@@ -207,7 +200,7 @@
     <!-- MISIÓN Y VISIÓN -->
     <section id="mision-vision" class="py-20 bg-slate-100 dark:bg-neutral-900 transition-colors">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
+            <div class="text-center mb-14">
                 <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">Misión y Visión</h2>
                 <p class="text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto">El propósito económico y social que guía a AgroChain</p>
             </div>
@@ -233,20 +226,20 @@
     <!-- PROCESO -->
     <section id="como-funciona" class="py-20 bg-white dark:bg-[#121212] transition-colors">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
+            <div class="text-center mb-14">
                 <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">¿Cómo funciona?</h2>
                 <p class="text-slate-600 dark:text-neutral-400 max-w-2xl mx-auto">Transparencia y desintermediación paso a paso</p>
             </div>
             <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
                     <div class="w-16 h-16 mx-auto bg-emerald-100 dark:bg-emerald-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">👤</div>
-                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">1. Registro</h3>
-                    <p class="text-sm text-slate-600 dark:text-neutral-400">Inicia sesión con Google o crea tu perfil como Productor o Comprador.</p>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">1. Perfil</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Inicia sesión con Google y personaliza tu perfil de Productor o Comprador.</p>
                 </div>
                 <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
                     <div class="w-16 h-16 mx-auto bg-amber-100 dark:bg-amber-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">🌱</div>
-                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">2. Publicación</h3>
-                    <p class="text-sm text-slate-600 dark:text-neutral-400">Sube tu cosecha documentando procesos de siembra y recolección.</p>
+                    <h3 class="text-xl font-bold mb-2 text-slate-900 dark:text-white">2. Catálogo</h3>
+                    <p class="text-sm text-slate-600 dark:text-neutral-400">Sube, edita y administra tus cosechas desde tu panel "Mis Productos".</p>
                 </div>
                 <div class="bg-slate-50 dark:bg-neutral-800 p-6 rounded-3xl text-center border border-slate-200 dark:border-neutral-700">
                     <div class="w-16 h-16 mx-auto bg-sky-100 dark:bg-sky-900/50 rounded-2xl flex items-center justify-center text-3xl mb-4">💬</div>
@@ -262,7 +255,7 @@
         </div>
     </section>
 
-    <!-- PRODUCTOS EN TIEMPO REAL (NUBE FIRESTORE) -->
+    <!-- MERCADO DE PRODUCTOS EN TIEMPO REAL -->
     <section id="productos" class="py-20 bg-slate-900 dark:bg-neutral-900 text-white">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
@@ -270,26 +263,30 @@
                     <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Mercado de Cosechas Directas</h2>
                     <p class="text-neutral-400 mt-2">Productos registrados en la nube de la región</p>
                 </div>
-                <span class="text-xs bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/30 font-medium flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Nube Sincronizada en Vivo
-                </span>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button id="btnManageProductsHero" onclick="openMyProductsModal()" class="hidden px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-full transition">
+                        📦 Gestionar Mis Productos
+                    </button>
+                    <span class="text-xs bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/30 font-medium flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Nube Sincronizada en Vivo
+                    </span>
+                </div>
             </div>
 
-            <!-- Contenedor dinámico de productos -->
             <div id="productsGrid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
                 <div class="col-span-full text-center py-12 text-neutral-500">Conectando con Cloud Firestore...</div>
             </div>
         </div>
     </section>
 
-    <!-- NUEVO APARTADO: COMUNIDAD / LISTA DE USUARIOS REGISTRADOS -->
+    <!-- COMUNIDAD / LISTA DE USUARIOS REGISTRADOS -->
     <section id="usuarios" class="py-16 bg-white dark:bg-[#161616] border-y border-slate-200 dark:border-neutral-800 transition-colors">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
                 <div>
                     <span class="text-brand-500 font-bold text-xs tracking-wider uppercase">Red Verificada</span>
                     <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">Comunidad AgroChain</h2>
-                    <p class="text-sm text-slate-500 dark:text-neutral-400">Personas que han iniciado sesión con Google en la plataforma</p>
+                    <p class="text-sm text-slate-500 dark:text-neutral-400">Usuarios registrados en la nube (productores y compradores)</p>
                 </div>
                 <span id="usersCountBadge" class="text-xs bg-emerald-500/15 text-brand-500 border border-brand-500/30 px-4 py-2 rounded-full font-bold w-fit">
                     0 usuarios registrados
@@ -310,7 +307,7 @@
                     <span class="text-brand-500 font-bold text-sm tracking-wider uppercase">Para Agricultores</span>
                     <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mt-2 mb-6">Publica tu cosecha y vende al precio justo</h2>
                     <p class="text-slate-600 dark:text-neutral-300 mb-8 leading-relaxed">
-                        Registra los detalles de tu finca, las fechas clave de tu siembra y recolección para ofrecer máxima transparencia a los compradores en cualquier dispositivo.
+                        Registra los detalles de tu finca, las fechas clave de tu siembra y recolección. Luego podrás editar cantidades, precios o eliminar lotes desde tu panel <strong>Mis Productos</strong>.
                     </p>
                     <ul class="space-y-4 text-slate-700 dark:text-neutral-300">
                         <li class="flex items-center gap-3">
@@ -319,7 +316,7 @@
                         </li>
                         <li class="flex items-center gap-3">
                             <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
-                            <span>Mensajería instantánea en la nube con clientes e inversores.</span>
+                            <span>Edición y control de inventario en tiempo real desde cualquier dispositivo.</span>
                         </li>
                         <li class="flex items-center gap-3">
                             <span class="w-7 h-7 bg-emerald-100 dark:bg-emerald-900/50 text-brand-500 rounded-full flex items-center justify-center text-sm font-bold">✓</span>
@@ -329,7 +326,7 @@
                 </div>
 
                 <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-3xl p-6 sm:p-8 shadow-xl">
-                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Formulario de Publicación</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Publicar Nueva Cosecha</h3>
                     <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Nombre del Producto</label>
@@ -387,7 +384,11 @@
         </div>
     </footer>
 
-    <!-- MODAL: LOGIN CON GOOGLE Y PERFILES DEMO -->
+    <!-- ===================================================================== -->
+    <!-- MODALES DE LA APLICACIÓN                                              -->
+    <!-- ===================================================================== -->
+
+    <!-- 1. MODAL: LOGIN CON GOOGLE Y PERFILES DEMO -->
     <div id="loginModal" class="hidden modal-wrap">
         <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative text-slate-800 dark:text-white">
             <button onclick="hideModal('loginModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
@@ -395,7 +396,6 @@
             <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">Iniciar Sesión</h3>
             <p class="text-sm text-slate-500 dark:text-neutral-400 mb-6">Conéctate con tu cuenta real de Google o usa un perfil de prueba:</p>
 
-            <!-- Botón Oficial de Google -->
             <button onclick="loginWithGoogle()" class="w-full py-3.5 px-4 bg-white hover:bg-slate-100 text-slate-800 font-bold rounded-2xl border border-slate-300 shadow-sm flex items-center justify-center gap-3 transition mb-6">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
                 <span>Continuar con Google</span>
@@ -407,7 +407,6 @@
                 <div class="flex-1 h-px bg-slate-200 dark:bg-neutral-800"></div>
             </div>
 
-            <!-- Acceso Rápido con Perfiles Demo -->
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="quickLogin('vendedor1@agrochain.co')" class="p-3 border border-emerald-300 dark:border-emerald-900/60 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-left hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition">
                     <div class="text-xs font-bold text-emerald-800 dark:text-emerald-300">👨‍🌾 Pedro Gómez</div>
@@ -429,7 +428,138 @@
         </div>
     </div>
 
-    <!-- MODAL: DETALLE DEL PRODUCTO Y PROCESO -->
+    <!-- 2. MODAL: MI PERFIL (VER Y EDITAR DATOS PERSONALES) -->
+    <div id="profileModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-slate-800 dark:text-white my-auto">
+            <button onclick="hideModal('profileModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-2xl font-bold">&times;</button>
+            
+            <div class="flex items-center gap-4 mb-6">
+                <img id="profPreviewImg" src="" alt="Foto" class="w-16 h-16 rounded-full object-cover border-2 border-brand-500 bg-slate-200 dark:bg-neutral-800">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Mi Perfil Personal</h3>
+                    <p id="profEmailDisplay" class="text-xs text-brand-500 font-medium"></p>
+                </div>
+            </div>
+
+            <form onsubmit="saveUserProfile(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Nombre de Usuario / Completo</label>
+                    <input id="profName" type="text" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">URL de Foto de Perfil</label>
+                    <input id="profPhoto" type="url" oninput="updateProfilePreview(this.value)" placeholder="https://ejemplo.com/mi-foto.jpg" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Rol en AgroChain</label>
+                        <select id="profRole" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm">
+                            <option value="Productor Agrícola">👨‍🌾 Productor Agrícola</option>
+                            <option value="Comprador / Inversor">💼 Comprador / Inversor</option>
+                            <option value="Productor y Comprador">🌱 Productor y Comprador</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Teléfono / WhatsApp</label>
+                        <input id="profPhone" type="text" placeholder="Ej: +57 300 000 0000" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Municipio / Finca / Empresa</label>
+                    <input id="profLocation" type="text" placeholder="Ej: Cúcuta / Finca La Esperanza, Tibú" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Descripción / Biografía</label>
+                    <textarea id="profBio" rows="2" placeholder="Cuéntales a otros usuarios qué cultivas o qué productos buscas..." class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm"></textarea>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="submit" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-sm shadow-md transition">
+                        💾 Guardar Cambios
+                    </button>
+                    <button type="button" onclick="logout(); hideModal('profileModal');" class="px-4 py-3 bg-red-500/15 hover:bg-red-500/25 text-red-500 font-bold rounded-xl text-sm transition">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. MODAL: MIS PRODUCTOS (CATÁLOGO PROPIO: EDITAR, ELIMINAR Y AGREGAR) -->
+    <div id="myProductsModal" class="hidden modal-wrap">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col text-slate-800 dark:text-white" style="max-height: 88vh;">
+            <button onclick="hideModal('myProductsModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-2xl font-bold">&times;</button>
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pr-8 mb-5 border-b border-slate-200 dark:border-neutral-800 pb-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Mis Productos Publicados</h3>
+                    <p class="text-xs text-slate-500 dark:text-neutral-400">Administra tu catálogo, actualiza precios/cantidades o elimina lotes</p>
+                </div>
+                <button onclick="hideModal('myProductsModal'); scrollToSection('para-productores');" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-xs flex items-center gap-2 w-fit shadow transition">
+                    <i class="fas fa-plus"></i> Agregar Nuevo Producto
+                </button>
+            </div>
+
+            <div id="myProductsList" class="flex-1 overflow-y-auto space-y-3 pr-1">
+                <!-- Se llena dinámicamente con los productos del usuario -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. MODAL: EDITAR PRODUCTO ESPECÍFICO -->
+    <div id="editProductModal" class="hidden modal-wrap" style="z-index: 120;">
+        <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-slate-800 dark:text-white my-auto">
+            <button onclick="hideModal('editProductModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-2xl font-bold">&times;</button>
+            
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-1">Editar Cosecha</h3>
+            <p class="text-xs text-slate-500 dark:text-neutral-400 mb-5">Los cambios se actualizarán al instante en el mercado</p>
+
+            <form onsubmit="saveProductEdit(event)" class="space-y-3.5">
+                <input type="hidden" id="editProdId">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Nombre del Producto</label>
+                    <input id="editProdName" type="text" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm" required>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Cantidad Disponible</label>
+                        <input id="editProdQty" type="text" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Precio ($ COP)</label>
+                        <input id="editProdPrice" type="text" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Ubicación / Finca</label>
+                    <input id="editProdLocation" type="text" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm" required>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Fecha Siembra</label>
+                        <input id="editProdPlant" type="date" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">Fecha Cosecha</label>
+                        <input id="editProdHarvest" type="date" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 dark:text-neutral-400 mb-1">URL de Imagen</label>
+                    <input id="editProdImg" type="url" class="field bg-slate-50 dark:bg-neutral-800 text-slate-800 dark:text-white border border-slate-200 dark:border-neutral-700 text-sm">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-sm shadow-md transition">
+                    ✅ Actualizar Producto
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. MODAL: DETALLE DEL PRODUCTO Y PROCESO -->
     <div id="detailModal" class="hidden modal-wrap">
         <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative text-slate-800 dark:text-white">
             <button onclick="hideModal('detailModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
@@ -437,7 +567,7 @@
         </div>
     </div>
 
-    <!-- MODAL: CHAT DIRECTO P2P EN TIEMPO REAL -->
+    <!-- 6. MODAL: CHAT DIRECTO P2P EN TIEMPO REAL -->
     <div id="chatModal" class="hidden modal-wrap" style="z-index: 110;">
         <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-lg w-full flex flex-col shadow-2xl text-slate-800 dark:text-white" style="height: 600px; max-height: 90vh;">
             <div class="p-5 border-b border-slate-200 dark:border-neutral-800 flex items-center justify-between bg-slate-50 dark:bg-neutral-950 rounded-t-3xl">
@@ -459,7 +589,7 @@
         </div>
     </div>
 
-    <!-- MODAL: BANDEJA DE MENSAJES RECIBIDOS -->
+    <!-- 7. MODAL: BANDEJA DE MENSAJES RECIBIDOS -->
     <div id="inboxModal" class="hidden modal-wrap">
         <div class="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 rounded-3xl max-w-md w-full p-6 shadow-2xl relative flex flex-col text-slate-800 dark:text-white" style="height: 500px; max-height: 85vh;">
             <button onclick="hideModal('inboxModal')" class="absolute top-6 right-6 text-neutral-400 hover:text-slate-800 dark:hover:text-white text-xl font-bold">&times;</button>
@@ -474,12 +604,12 @@
     <!-- CONTROLADOR CLOUD FIRESTORE + GOOGLE AUTHENTICATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, setDoc, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CREDENCIALES DE TU PROYECTO AGROCHANGE
+        // CREDENCIALES CORREGIDAS DE TU PROYECTO AGROCHANGE (Con 'L' mayúscula en apiKey)
         const firebaseConfig = {
-            apiKey: "AIzaSyAahNlKKm2R0LWZAaAwkfnY8nc6RIEAxEQ",
+            apiKey: "AIzaSyAahNLKKm2R0LWZAaAwkfnY8nc6RIEAxEQ",
             authDomain: "agrochange.firebaseapp.com",
             projectId: "agrochange",
             storageBucket: "agrochange.firebasestorage.app",
@@ -518,10 +648,10 @@
 
         // --- 2. USUARIOS DEMO Y ESTADO DE SESIÓN ---
         const DEMO_USERS = {
-            'vendedor1@agrochain.co': { name: 'Pedro Gómez', role: 'vendedor', email: 'vendedor1@agrochain.co', photo: '' },
-            'vendedor2@agrochain.co': { name: 'María Rodríguez', role: 'vendedor', email: 'vendedor2@agrochain.co', photo: '' },
-            'comprador1@agrochain.co': { name: 'Carlos Mendoza', role: 'comprador', email: 'comprador1@agrochain.co', photo: '' },
-            'comprador2@agrochain.co': { name: 'Distribuidora Agro', role: 'comprador', email: 'comprador2@agrochain.co', photo: '' }
+            'vendedor1@agrochain.co': { docId: 'demo_vendedor1', name: 'Pedro Gómez', role: 'Productor Agrícola', email: 'vendedor1@agrochain.co', photo: '', phone: '+57 310 555 0101', location: 'Tibú, Norte de Santander', bio: 'Productor de cacao fino de aroma.' },
+            'vendedor2@agrochain.co': { docId: 'demo_vendedor2', name: 'María Rodríguez', role: 'Productor Agrícola', email: 'vendedor2@agrochain.co', photo: '', phone: '+57 311 555 0202', location: 'Toledo, Norte de Santander', bio: 'Caficultora de especialidad.' },
+            'comprador1@agrochain.co': { docId: 'demo_comprador1', name: 'Carlos Mendoza', role: 'Comprador / Inversor', email: 'comprador1@agrochain.co', photo: '', phone: '+57 312 555 0303', location: 'Cúcuta, Norte de Santander', bio: 'Comprador directo para exportación.' },
+            'comprador2@agrochain.co': { docId: 'demo_comprador2', name: 'Distribuidora Agro', role: 'Comprador / Inversor', email: 'comprador2@agrochain.co', photo: '', phone: '+57 315 555 0404', location: 'Los Patios, Norte de Santander', bio: 'Comercializadora regional.' }
         };
 
         window.currentUser = null;
@@ -530,32 +660,66 @@
         let unsubscribeChat = null;
         let unsubscribeInbox = null;
 
+        // Cargar o crear perfil extendido desde Firestore
+        async function syncUserProfileFromCloud(docId, fallbackData) {
+            const userRef = doc(db, "users", docId);
+            const snap = await getDoc(userRef);
+            if (snap.exists()) {
+                const cloudData = snap.data();
+                window.currentUser = {
+                    docId: docId,
+                    name: cloudData.name || fallbackData.name,
+                    email: cloudData.email || fallbackData.email,
+                    photo: cloudData.photo !== undefined ? cloudData.photo : fallbackData.photo,
+                    role: cloudData.role || fallbackData.role || 'Productor y Comprador',
+                    phone: cloudData.phone || fallbackData.phone || '',
+                    location: cloudData.location || fallbackData.location || '',
+                    bio: cloudData.bio || fallbackData.bio || ''
+                };
+            } else {
+                window.currentUser = { docId, ...fallbackData };
+            }
+
+            await setDoc(userRef, {
+                name: window.currentUser.name,
+                email: window.currentUser.email,
+                photo: window.currentUser.photo,
+                role: window.currentUser.role,
+                phone: window.currentUser.phone,
+                location: window.currentUser.location,
+                bio: window.currentUser.bio,
+                lastLogin: serverTimestamp()
+            }, { merge: true });
+        }
+
         // Escuchar sesión real de Google
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                window.currentUser = {
-                    uid: user.uid,
-                    name: user.displayName || user.email.split('@')[0],
-                    role: 'productor / comprador',
-                    email: user.email,
-                    photo: user.photoURL || ''
-                };
-
-                // Guardar usuario en Cloud Firestore para el directorio de comunidad
                 try {
-                    await setDoc(doc(db, "users", user.uid), {
-                        uid: user.uid,
-                        name: window.currentUser.name,
-                        email: window.currentUser.email,
-                        photo: window.currentUser.photo,
-                        lastLogin: serverTimestamp()
-                    }, { merge: true });
+                    await syncUserProfileFromCloud(user.uid, {
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        photo: user.photoURL || '',
+                        role: 'Productor y Comprador',
+                        phone: '',
+                        location: '',
+                        bio: ''
+                    });
                 } catch (e) {
-                    console.error("Error registrando usuario en Firestore:", e);
+                    console.error("Error sincronizando perfil:", e);
+                    window.currentUser = {
+                        docId: user.uid,
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        photo: user.photoURL || '',
+                        role: 'Productor y Comprador',
+                        phone: '',
+                        location: '',
+                        bio: ''
+                    };
                 }
-
                 listenToInbox();
-            } else {
+            } else if (!window.currentUser || !window.currentUser.docId.startsWith('demo_')) {
                 window.currentUser = null;
                 if (unsubscribeInbox) unsubscribeInbox();
             }
@@ -574,22 +738,16 @@
         };
 
         window.quickLogin = async function(email) {
-            window.currentUser = DEMO_USERS[email];
-            // Registrar también el perfil demo en la colección 'users' si se usa
+            const baseDemo = DEMO_USERS[email];
             try {
-                await setDoc(doc(db, "users", email.replace(/[^a-zA-Z0-9]/g, '_')), {
-                    name: window.currentUser.name,
-                    email: window.currentUser.email,
-                    photo: '',
-                    lastLogin: serverTimestamp()
-                }, { merge: true });
-            } catch (e) {}
-
+                await syncUserProfileFromCloud(baseDemo.docId, baseDemo);
+            } catch (e) {
+                window.currentUser = { ...baseDemo };
+            }
             renderAuthNav();
             listenToInbox();
             hideModal('loginModal');
             renderProductsFromCache();
-            alert(`✅ Sesión iniciada como: ${window.currentUser.name}`);
         };
 
         window.logout = async function() {
@@ -602,27 +760,36 @@
 
         function renderAuthNav() {
             const container = document.getElementById('authArea');
+            const heroBtn = document.getElementById('btnManageProductsHero');
+
             if (window.currentUser) {
+                if (heroBtn) heroBtn.classList.remove('hidden');
+
                 const avatarHtml = window.currentUser.photo 
                     ? `<img src="${window.currentUser.photo}" class="w-8 h-8 rounded-full border border-brand-500 object-cover">`
-                    : `<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">${window.currentUser.name.charAt(0)}</div>`;
+                    : `<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">${window.currentUser.name.charAt(0).toUpperCase()}</div>`;
 
                 container.innerHTML = `
-                    <button onclick="showModal('inboxModal')" class="relative px-2.5 py-2 text-sm font-semibold text-slate-700 dark:text-neutral-300 hover:text-brand-500 flex items-center gap-1.5" title="Mis Mensajes">
+                    <button onclick="openMyProductsModal()" class="px-2.5 sm:px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-brand-500 text-xs font-bold flex items-center gap-1.5 transition" title="Mis Productos">
+                        <i class="fas fa-box-open"></i>
+                        <span class="hidden md:inline">Mis Productos</span>
+                    </button>
+
+                    <button onclick="showModal('inboxModal')" class="relative p-2 text-slate-700 dark:text-neutral-300 hover:text-brand-500 flex items-center gap-1" title="Mis Mensajes">
                         <i class="fas fa-comments text-lg text-brand-500"></i>
-                        <span class="hidden md:inline">Mensajes</span>
                         <span id="unreadBadge" class="hidden w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
                     </button>
-                    <div class="flex items-center gap-2 border-l border-slate-200 dark:border-neutral-700 pl-2 sm:pl-3">
+
+                    <button onclick="openProfileModal()" class="flex items-center gap-2 bg-slate-100 dark:bg-neutral-800 hover:border-brand-500 border border-slate-200 dark:border-neutral-700 px-2.5 py-1 rounded-xl transition" title="Ver y Editar Mi Perfil">
                         ${avatarHtml}
                         <div class="hidden sm:block text-left">
-                            <div class="text-xs font-bold text-slate-900 dark:text-white leading-tight max-w-[120px] truncate">${window.currentUser.name}</div>
-                            <div class="text-[10px] text-brand-500 capitalize">Conectado</div>
+                            <div class="text-xs font-bold text-slate-900 dark:text-white leading-tight max-w-[115px] truncate">${window.currentUser.name}</div>
+                            <div class="text-[10px] text-brand-500 font-medium">Mi Perfil ✎</div>
                         </div>
-                        <button onclick="logout()" class="text-xs text-red-500 font-semibold ml-1 hover:underline">Salir</button>
-                    </div>
+                    </button>
                 `;
             } else {
+                if (heroBtn) heroBtn.classList.add('hidden');
                 container.innerHTML = `
                     <button onclick="showModal('loginModal')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md flex items-center gap-2 transition">
                         <i class="fab fa-google"></i> <span>Iniciar Sesión</span>
@@ -631,7 +798,80 @@
             }
         }
 
-        // --- 3. DIRECTORIO DE USUARIOS REGISTRADOS EN LA NUBE ---
+        // --- 3. GESTIÓN DE PERFIL PERSONAL (VER Y MODIFICAR DATOS) ---
+        window.openProfileModal = function() {
+            if (!window.currentUser) return;
+            document.getElementById('profEmailDisplay').textContent = window.currentUser.email;
+            document.getElementById('profName').value = window.currentUser.name || '';
+            document.getElementById('profPhoto').value = window.currentUser.photo || '';
+            document.getElementById('profRole').value = window.currentUser.role || 'Productor y Comprador';
+            document.getElementById('profPhone').value = window.currentUser.phone || '';
+            document.getElementById('profLocation').value = window.currentUser.location || '';
+            document.getElementById('profBio').value = window.currentUser.bio || '';
+            updateProfilePreview(window.currentUser.photo);
+            showModal('profileModal');
+        };
+
+        window.updateProfilePreview = function(url) {
+            const img = document.getElementById('profPreviewImg');
+            if (url && url.trim().startsWith('http')) {
+                img.src = url.trim();
+            } else {
+                const initial = (window.currentUser?.name || 'U').charAt(0).toUpperCase();
+                img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initial)}&background=00b972&color=fff&bold=true`;
+            }
+        };
+
+        window.saveUserProfile = async function(e) {
+            e.preventDefault();
+            if (!window.currentUser) return;
+
+            const updatedName = document.getElementById('profName').value.trim();
+            const updatedPhoto = document.getElementById('profPhoto').value.trim();
+            const updatedRole = document.getElementById('profRole').value;
+            const updatedPhone = document.getElementById('profPhone').value.trim();
+            const updatedLocation = document.getElementById('profLocation').value.trim();
+            const updatedBio = document.getElementById('profBio').value.trim();
+
+            try {
+                // Actualizar en Firestore
+                await setDoc(doc(db, "users", window.currentUser.docId), {
+                    name: updatedName,
+                    photo: updatedPhoto,
+                    role: updatedRole,
+                    phone: updatedPhone,
+                    location: updatedLocation,
+                    bio: updatedBio,
+                    lastLogin: serverTimestamp()
+                }, { merge: true });
+
+                // Si está autenticado con Firebase Auth real, actualizar también su displayName
+                if (auth.currentUser) {
+                    try {
+                        await updateProfile(auth.currentUser, {
+                            displayName: updatedName,
+                            photoURL: updatedPhoto || auth.currentUser.photoURL
+                        });
+                    } catch (err) {}
+                }
+
+                window.currentUser.name = updatedName;
+                window.currentUser.photo = updatedPhoto;
+                window.currentUser.role = updatedRole;
+                window.currentUser.phone = updatedPhone;
+                window.currentUser.location = updatedLocation;
+                window.currentUser.bio = updatedBio;
+
+                renderAuthNav();
+                hideModal('profileModal');
+                alert("✅ ¡Tus datos personales se han actualizado en la nube!");
+            } catch (error) {
+                console.error("Error guardando perfil:", error);
+                alert("Error al actualizar el perfil: " + error.message);
+            }
+        };
+
+        // --- 4. DIRECTORIO DE USUARIOS REGISTRADOS EN LA NUBE ---
         function listenToUsers() {
             const q = query(collection(db, "users"), orderBy("lastLogin", "desc"));
             onSnapshot(q, (snapshot) => {
@@ -649,18 +889,20 @@
                     const u = docSnap.data();
                     const isMe = window.currentUser && window.currentUser.email === u.email;
                     const photoHtml = u.photo 
-                        ? `<img src="${u.photo}" alt="${u.name}" class="w-12 h-12 rounded-full object-cover border-2 border-brand-500">`
-                        : `<div class="w-12 h-12 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-lg">${u.name.charAt(0)}</div>`;
+                        ? `<img src="${u.photo}" alt="${u.name}" class="w-12 h-12 rounded-full object-cover border-2 border-brand-500 shrink-0">`
+                        : `<div class="w-12 h-12 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-lg shrink-0">${(u.name || 'U').charAt(0).toUpperCase()}</div>`;
 
                     grid.innerHTML += `
-                        <div class="bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl p-4 flex items-center gap-3.5 shadow-sm">
+                        <div class="bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-2xl p-4 flex items-start gap-3.5 shadow-sm">
                             ${photoHtml}
                             <div class="flex-1 min-w-0">
                                 <h4 class="font-bold text-sm text-slate-900 dark:text-white truncate">${u.name}</h4>
+                                <p class="text-[10px] text-brand-500 font-semibold truncate">${u.role || 'Miembro AgroChain'}</p>
                                 <p class="text-[11px] text-slate-500 dark:text-neutral-400 truncate">${u.email}</p>
+                                ${u.location ? `<p class="text-[10px] text-neutral-400 truncate mt-0.5">📍 ${u.location}</p>` : ''}
                                 ${isMe 
-                                    ? `<span class="inline-block mt-1.5 text-[10px] bg-emerald-500/15 text-brand-500 px-2.5 py-0.5 rounded-full font-bold">Tu cuenta activa</span>`
-                                    : `<button onclick="startChat('${u.email}', '${u.name}', 'Consulta Directa')" class="mt-1.5 text-xs text-brand-500 hover:underline font-bold flex items-center gap-1"><i class="fas fa-comment-dots"></i> Enviar mensaje</button>`
+                                    ? `<button onclick="openProfileModal()" class="mt-2 text-[10px] bg-emerald-500/15 text-brand-500 px-2.5 py-0.5 rounded-full font-bold hover:bg-emerald-500/25 transition">Editar mi perfil ✎</button>`
+                                    : `<button onclick="startChat('${u.email}', '${u.name}', 'Consulta Directa')" class="mt-2 text-xs text-brand-500 hover:underline font-bold flex items-center gap-1"><i class="fas fa-comment-dots"></i> Enviar mensaje</button>`
                                 }
                             </div>
                         </div>
@@ -669,7 +911,7 @@
             });
         }
 
-        // --- 4. PRODUCTOS EN TIEMPO REAL DESDE CLOUD FIRESTORE ---
+        // --- 5. PRODUCTOS EN TIEMPO REAL Y APARTADO "MIS PRODUCTOS" ---
         function listenToProducts() {
             const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
             onSnapshot(q, (snapshot) => {
@@ -678,6 +920,9 @@
                     allProductsCache.push({ id: docSnap.id, ...docSnap.data() });
                 });
                 renderProductsFromCache();
+                if (!document.getElementById('myProductsModal').classList.contains('hidden')) {
+                    renderMyProductsList();
+                }
             }, (error) => {
                 console.error("Error leyendo productos de Firestore:", error);
                 document.getElementById('productsGrid').innerHTML = `<div class="col-span-full text-center py-8 text-red-400">Error conectando con Firestore. Revisa las reglas de seguridad.</div>`;
@@ -694,6 +939,8 @@
             grid.innerHTML = '';
             allProductsCache.forEach(p => {
                 const imgUrl = p.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800';
+                const isOwner = window.currentUser && window.currentUser.email === p.sellerEmail;
+
                 grid.innerHTML += `
                     <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-3xl overflow-hidden card-hover flex flex-col justify-between shadow-sm">
                         <div>
@@ -701,6 +948,7 @@
                                 <span class="absolute top-3 right-3 bg-brand-500 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow">
                                     Verified Blockchain
                                 </span>
+                                ${isOwner ? `<span class="absolute top-3 left-3 bg-slate-900/85 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full">Tu Producto</span>` : ''}
                             </div>
                             <div class="p-6">
                                 <div class="text-xs text-brand-500 font-semibold mb-1">${p.location || 'Norte de Santander'}</div>
@@ -716,15 +964,125 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-6 pt-0">
-                            <button onclick="openProductDetail('${p.id}')" class="w-full py-3 bg-slate-900 hover:bg-brand-500 dark:bg-white dark:hover:bg-brand-500 text-white dark:text-slate-900 dark:hover:text-white font-bold rounded-xl transition text-sm">
+                        <div class="p-6 pt-0 flex gap-2">
+                            <button onclick="openProductDetail('${p.id}')" class="flex-1 py-3 bg-slate-900 hover:bg-brand-500 dark:bg-white dark:hover:bg-brand-500 text-white dark:text-slate-900 dark:hover:text-white font-bold rounded-xl transition text-sm">
                                 Ver Proceso y Contactar →
+                            </button>
+                            ${isOwner ? `<button onclick="openEditProductModal('${p.id}')" class="px-3.5 py-3 bg-amber-500/15 hover:bg-amber-500/25 text-amber-500 rounded-xl font-bold text-sm transition" title="Editar producto"><i class="fas fa-pen"></i></button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Abrir Modal "Mis Productos"
+        window.openMyProductsModal = function() {
+            if (!window.currentUser) {
+                showModal('loginModal');
+                return;
+            }
+            renderMyProductsList();
+            showModal('myProductsModal');
+        };
+
+        function renderMyProductsList() {
+            const list = document.getElementById('myProductsList');
+            const myProducts = allProductsCache.filter(p => p.sellerEmail === window.currentUser.email);
+
+            if (!myProducts.length) {
+                list.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-4xl mb-3">🌾</div>
+                        <p class="text-sm text-slate-500 dark:text-neutral-400 mb-4">Aún no has publicado ningún producto con esta cuenta (${window.currentUser.email}).</p>
+                        <button onclick="hideModal('myProductsModal'); scrollToSection('para-productores');" class="px-5 py-2.5 bg-brand-500 text-white font-bold rounded-xl text-xs">
+                            Publicar mi primera cosecha
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = '';
+            myProducts.forEach(p => {
+                const imgUrl = p.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=400';
+                list.innerHTML += `
+                    <div class="bg-slate-50 dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3.5 min-w-0">
+                            <img src="${imgUrl}" alt="${p.name}" class="w-16 h-16 rounded-xl object-cover shrink-0">
+                            <div class="min-w-0">
+                                <h4 class="font-bold text-base text-slate-900 dark:text-white truncate">${p.name}</h4>
+                                <div class="text-sm font-bold text-brand-500">${p.price} <span class="text-xs font-normal text-slate-500 dark:text-neutral-400">• Cant: ${p.quantity}</span></div>
+                                <div class="text-xs text-slate-500 dark:text-neutral-400 truncate">📍 ${p.location}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button onclick="openEditProductModal('${p.id}')" class="flex-1 sm:flex-initial px-3.5 py-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-500 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button onclick="deleteMyProduct('${p.id}', '${p.name.replace(/'/g, "\\'")}')" class="flex-1 sm:flex-initial px-3.5 py-2 bg-red-500/15 hover:bg-red-500/25 text-red-500 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                                <i class="fas fa-trash"></i> Eliminar
                             </button>
                         </div>
                     </div>
                 `;
             });
         }
+
+        // Abrir Modal de Edición de Producto
+        window.openEditProductModal = function(productId) {
+            const p = allProductsCache.find(item => item.id === productId);
+            if (!p) return;
+
+            document.getElementById('editProdId').value = p.id;
+            document.getElementById('editProdName').value = p.name || '';
+            document.getElementById('editProdQty').value = p.quantity || '';
+            document.getElementById('editProdPrice').value = p.price || '';
+            document.getElementById('editProdLocation').value = p.location || '';
+            document.getElementById('editProdPlant').value = p.plantDate || '';
+            document.getElementById('editProdHarvest').value = p.harvestDate || '';
+            document.getElementById('editProdImg').value = p.image || '';
+
+            showModal('editProductModal');
+        };
+
+        // Guardar Edición en Firestore
+        window.saveProductEdit = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editProdId').value;
+            if (!id) return;
+
+            try {
+                await updateDoc(doc(db, "products", id), {
+                    name: document.getElementById('editProdName').value.trim(),
+                    quantity: document.getElementById('editProdQty').value.trim(),
+                    price: document.getElementById('editProdPrice').value.trim(),
+                    location: document.getElementById('editProdLocation').value.trim(),
+                    plantDate: document.getElementById('editProdPlant').value,
+                    harvestDate: document.getElementById('editProdHarvest').value,
+                    image: document.getElementById('editProdImg').value.trim() || 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800',
+                    sellerName: window.currentUser.name
+                });
+
+                hideModal('editProductModal');
+                alert("✅ ¡Producto actualizado correctamente!");
+            } catch (error) {
+                console.error("Error actualizando producto:", error);
+                alert("Error al actualizar el producto: " + error.message);
+            }
+        };
+
+        // Eliminar Producto de Firestore
+        window.deleteMyProduct = async function(productId, productName) {
+            if (!confirm(`¿Estás seguro de eliminar "${productName}" del mercado? Esta acción no se puede deshacer.`)) return;
+
+            try {
+                await deleteDoc(doc(db, "products", productId));
+                alert("🗑️ Producto eliminado del mercado.");
+            } catch (error) {
+                console.error("Error eliminando producto:", error);
+                alert("Error al eliminar: " + error.message);
+            }
+        };
 
         window.handleProductSubmit = async function(e) {
             e.preventDefault();
@@ -750,7 +1108,7 @@
             try {
                 await addDoc(collection(db, "products"), newProduct);
                 document.getElementById('productForm').reset();
-                alert("✅ ¡Producto publicado en la nube! Ya es visible en todos los dispositivos.");
+                alert("✅ ¡Producto publicado en la nube! Puedes administrarlo cuando quieras en 'Mis Productos'.");
                 scrollToSection('productos');
             } catch (error) {
                 console.error("Error al publicar:", error);
@@ -787,7 +1145,9 @@
                 </div>
 
                 ${isOwner 
-                    ? `<div class="w-full py-3.5 bg-slate-200 dark:bg-neutral-800 text-center text-xs text-neutral-400 rounded-xl font-bold">Esta es tu propia publicación</div>`
+                    ? `<button onclick="hideModal('detailModal'); openEditProductModal('${p.id}');" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition">
+                        <i class="fas fa-edit"></i> Editar esta Publicación
+                       </button>`
                     : `<button onclick="startChat('${p.sellerEmail}', '${p.sellerName}', '${p.name}')" class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition">
                         <i class="fas fa-comments"></i> Abrir Chat Directo con ${p.sellerName}
                        </button>`
@@ -796,7 +1156,7 @@
             showModal('detailModal');
         };
 
-        // --- 5. CHAT Y MENSAJERÍA P2P EN TIEMPO REAL EN LA NUBE ---
+        // --- 6. CHAT Y MENSAJERÍA P2P EN TIEMPO REAL EN LA NUBE ---
         window.startChat = function(otherEmail, otherName, productName) {
             if (!window.currentUser) {
                 alert('⚠️ Inicia sesión para chatear en tiempo real.');
@@ -919,7 +1279,7 @@
             });
         }
 
-        // --- 6. FUNCIONES AUXILIARES GLOBALES ---
+        // --- 7. FUNCIONES AUXILIARES GLOBALES ---
         window.showModal = id => document.getElementById(id).classList.remove('hidden');
         window.hideModal = id => document.getElementById(id).classList.add('hidden');
         window.scrollToSection = id => document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
